@@ -218,7 +218,9 @@ void mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_
 #endif /* HAGL_HAL_SINGLE_BUFFER */
 
 #ifdef HAGL_HAL_USE_DOUBLE_BUFFER
-    mipi_display_write_data_dma(buffer, size * DISPLAY_DEPTH / 8);
+    mipi_display_set_address(x1, y1, x2, y2);
+    mipi_display_write_data(buffer, size * DISPLAY_DEPTH / 8);
+    //mipi_display_write_data_dma(buffer, size * DISPLAY_DEPTH / 8);
 #endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
 }
 
