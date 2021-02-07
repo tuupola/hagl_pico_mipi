@@ -48,17 +48,12 @@ typedef uint16_t color_t;
 #include "hagl_hal_single.h"
 #endif
 
-/* Default config is ok for Pimorony Pico Display Pack. When compiling */
+/* Default config is ok for Pimoroni Pico Display Pack. When compiling */
 /* you can override these by including an user config header file first. */
 /* https://shop.pimoroni.com/products/pico-display-pack */
-#ifndef MIPI_DISPLAY_ADDRESS_MODE
-#define MIPI_DISPLAY_ADDRESS_MODE   (MIPI_DCS_ADDRESS_MODE_BGR)
-#endif
-#ifndef MIPI_DISPLAY_OFFSET_X
-#define MIPI_DISPLAY_OFFSET_X       (0)
-#endif
-#ifndef MIPI_DISPLAY_OFFSET_Y
-#define MIPI_DISPLAY_OFFSET_Y       (0)
+
+#ifndef MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ
+#define MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ     (64 * 1000 * 1000)
 #endif
 #ifndef MIPI_DISPLAY_PIN_CS
 #define MIPI_DISPLAY_PIN_CS         (17)
@@ -84,6 +79,9 @@ typedef uint16_t color_t;
 #ifndef MIPI_DISPLAY_PIXEL_FORMAT
 #define MIPI_DISPLAY_PIXEL_FORMAT   (MIPI_DCS_PIXEL_FORMAT_16BIT)
 #endif
+#ifndef MIPI_DISPLAY_ADDRESS_MODE
+#define MIPI_DISPLAY_ADDRESS_MODE   (MIPI_DCS_ADDRESS_MODE_RGB)
+#endif
 #ifndef MIPI_DISPLAY_INVERT
 #define MIPI_DISPLAY_INVERT
 #endif
@@ -95,6 +93,12 @@ typedef uint16_t color_t;
 #endif
 #ifndef MIPI_DISPLAY_DEPTH
 #define MIPI_DISPLAY_DEPTH          (16)
+#endif
+#ifndef MIPI_DISPLAY_OFFSET_X
+#define MIPI_DISPLAY_OFFSET_X       (52)
+#endif
+#ifndef MIPI_DISPLAY_OFFSET_Y
+#define MIPI_DISPLAY_OFFSET_Y       (40)
 #endif
 
 #define DISPLAY_WIDTH               (MIPI_DISPLAY_WIDTH)
