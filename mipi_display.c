@@ -24,8 +24,8 @@ SOFTWARE.
 
 -cut-
 
-This file is part of the GD32V MIPI DCS HAL for the HAGL graphics library:
-https://github.com/tuupola/hagl_gd32v_mipi
+This file is part of the Raspberry Pi Pico HAL for the HAGL graphics library:
+https://github.com/tuupola/hagl_pico_mipi
 
 SPDX-License-Identifier: MIT
 
