@@ -42,23 +42,6 @@ SPDX-License-Identifier: MIT
 #include "mipi_dcs.h"
 #include "mipi_display.h"
 
-static const uint8_t DELAY_BIT = 1 << 7;
-
-static const mipi_init_command_t init_commands[] = {
-    {MIPI_DCS_SOFT_RESET, {0}, 0 | DELAY_BIT},
-    {MIPI_DCS_SET_ADDRESS_MODE, {MIPI_DISPLAY_ADDRESS_MODE}, 1},
-    {MIPI_DCS_SET_PIXEL_FORMAT, {MIPI_DISPLAY_PIXEL_FORMAT}, 1},
-#ifdef MIPI_DISPLAY_INVERT
-    {MIPI_DCS_ENTER_INVERT_MODE, {0}, 0},
-#else
-    {MIPI_DCS_EXIT_INVERT_MODE, {0}, 0},
-#endif
-    {MIPI_DCS_EXIT_SLEEP_MODE, {0}, 0 | DELAY_BIT},
-    {MIPI_DCS_SET_DISPLAY_ON, {0}, 0 | DELAY_BIT},
-    /* End of commands . */
-    {0, {0}, 0xff},
-};
-
 static void mipi_display_write_command(const uint8_t command)
 {
     /* Set DC low to denote incoming command. */
@@ -172,8 +155,6 @@ static void mipi_display_spi_master_init()
 
 void mipi_display_init()
 {
-    uint8_t cmd = 0;
-
     /* Init the spi driver. */
     mipi_display_spi_master_init();
     sleep_ms(100);
@@ -189,15 +170,27 @@ void mipi_display_init()
         sleep_ms(100);
     }
 
-    /* Send all the commands. */
-    while (init_commands[cmd].count != 0xff) {
-        mipi_display_write_command(init_commands[cmd].command);
-        mipi_display_write_data(init_commands[cmd].data, init_commands[cmd].count & 0x1F);
-        if (init_commands[cmd].count & DELAY_BIT) {
-            sleep_ms(200);
-        }
-        cmd++;
-    }
+    /* Send minimal init commands. */
+    mipi_display_write_command(MIPI_DCS_SOFT_RESET);
+    sleep_ms(200);
+
+    mipi_display_write_command(MIPI_DCS_SET_ADDRESS_MODE);
+    mipi_display_write_data(&(uint8_t){MIPI_DISPLAY_ADDRESS_MODE}, 1);
+
+    mipi_display_write_command(MIPI_DCS_SET_PIXEL_FORMAT);
+    mipi_display_write_data(&(uint8_t){MIPI_DISPLAY_PIXEL_FORMAT}, 1);
+
+#ifdef MIPI_DISPLAY_INVERT
+    mipi_display_write_command(MIPI_DCS_ENTER_INVERT_MODE);
+#else
+    mipi_display_write_command(MIPI_DCS_EXIT_INVERT_MODE);
+#endif
+
+    mipi_display_write_command(MIPI_DCS_EXIT_SLEEP_MODE);
+    sleep_ms(200);
+
+    mipi_display_write_command(MIPI_DCS_SET_DISPLAY_ON);
+    sleep_ms(200);
 
     /* Enable backlight */
     if (MIPI_DISPLAY_PIN_BL > 0) {

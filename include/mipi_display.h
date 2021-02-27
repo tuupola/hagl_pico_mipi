@@ -43,12 +43,6 @@ extern "C" {
 
 #include "hagl_hal.h"
 
-typedef struct {
-    uint8_t command;
-    uint8_t data[16];
-    uint8_t count;
-} mipi_init_command_t;
-
 void mipi_display_init();
 void mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_t *buffer);
 void mipi_display_ioctl(uint8_t command, uint8_t *data, size_t size);
