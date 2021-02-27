@@ -37,10 +37,13 @@ SPDX-License-Identifier: MIT
 // #include <stdatomic.h>
 
 #include <hardware/spi.h>
+#include <hardware/dma.h>
 #include <hardware/gpio.h>
 
 #include "mipi_dcs.h"
 #include "mipi_display.h"
+
+static int dma_channel;
 
 static void mipi_display_write_command(const uint8_t command)
 {
@@ -73,11 +76,35 @@ static void mipi_display_write_data(const uint8_t *data, size_t length)
     spi_write_blocking(spi0, data, length);
 
     /* Set CS high to ignore any traffic on SPI bus. */
-    gpio_put(MIPI_DISPLAY_PIN_CS, 0);
+    gpio_put(MIPI_DISPLAY_PIN_CS, 1);
 }
 
 static void mipi_display_write_data_dma(const uint8_t *buffer, size_t length)
 {
+    if (0 == length) {
+        return;
+    };
+
+    /* Set DC high to denote incoming data. */
+    gpio_put(MIPI_DISPLAY_PIN_DC, 1);
+
+    /* Set CS low to reserve the SPI bus. */
+    gpio_put(MIPI_DISPLAY_PIN_CS, 0);
+
+    dma_channel_wait_for_finish_blocking(dma_channel);
+    dma_channel_set_trans_count(dma_channel, length, false);
+    dma_channel_set_read_addr(dma_channel, buffer, true);
+}
+
+static void mipi_display_dma_init()
+{
+    printf("HAGL HAL is using DMA.\r\n");
+    dma_channel = dma_claim_unused_channel(true);
+    dma_channel_config channel_config = dma_channel_get_default_config(dma_channel);
+    channel_config_set_transfer_data_size(&channel_config, DMA_SIZE_8);
+    channel_config_set_dreq(&channel_config, DREQ_SPI0_TX);
+    dma_channel_set_config(dma_channel, &channel_config, false);
+    dma_channel_set_write_addr(dma_channel, &spi_get_hw(spi0)->dr, false);
 }
 
 static void mipi_display_read_data(uint8_t *data, size_t length)
@@ -124,10 +151,6 @@ static void mipi_display_set_address(uint16_t x1, uint16_t y1, uint16_t x2, uint
     }
 
     mipi_display_write_command(MIPI_DCS_WRITE_MEMORY_START);
-}
-
-static void mipi_display_dma_init()
-{
 }
 
 static void mipi_display_spi_master_init()
@@ -204,7 +227,9 @@ void mipi_display_init()
     mipi_display_set_address(0, 0, MIPI_DISPLAY_WIDTH - 1, MIPI_DISPLAY_HEIGHT - 1);
 
 #ifdef HAGL_HAL_USE_DOUBLE_BUFFER
+#ifdef HAGL_HAL_USE_DMA
     mipi_display_dma_init();
+#endif /* HAGL_HAL_USE_DMA */
 #endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
 }
 
@@ -225,8 +250,11 @@ void mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_
 
 #ifdef HAGL_HAL_USE_DOUBLE_BUFFER
     mipi_display_set_address(x1, y1, x2, y2);
+#ifdef HAGL_HAL_USE_DMA
+    mipi_display_write_data_dma(buffer, size * DISPLAY_DEPTH / 8);
+#else
     mipi_display_write_data(buffer, size * DISPLAY_DEPTH / 8);
-    //mipi_display_write_data_dma(buffer, size * DISPLAY_DEPTH / 8);
+#endif /* HAGL_HAL_USE_DMA */
 #endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
 }
 
