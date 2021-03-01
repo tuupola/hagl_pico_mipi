@@ -45,6 +45,28 @@ target_compile_definitions(firmware PRIVATE
 
 The default config can be found in `hagl_hal.h`. Defaults are ok for Pimoroni Pico Display Pack in vertical mode.
 
+## Speed
+
+Below testing was done with Pimoroni Pico Display Pack. Double buffering refresh rate was set to 30 frames per second. Number represents operations per seconsd ie. bigger number is better.
+
+|                               | Single | Double    | Double DMA |
+|-------------------------------|--------|-----------|------------|
+| hagl_put_pixel()              | 104919 |    229668 |     328069 |
+| hagl_draw_line()              |   1602 |     10688 |      15311 |
+| hagl_draw_circle()            |   1610 |     14925 |      21412 |
+| hagl_fill_circle()            |   1267 |      7201 |      10281 |
+| hagl_draw_ellipse()           |    965 |      8179 |      11696 |
+| hagl_fill_ellipse()           |    492 |      2790 |       4021 |
+| hagl_draw_triangle()          |    535 |      3661 |       5230 |
+| hagl_fill_triangle()          |    346 |       499 |        711 |
+| hagl_draw_rectangle()         |   8989 |     12168 |      17425 |
+| hagl_fill_rectangle()         |    611 |      3979 |       5752 |
+| hagl_draw_rounded_rectangle() |   3552 |     10802 |      15417 |
+| hagl_fill_rounded_rectangle() |    569 |      3664 |       5271 |
+| hagl_draw_polygon()           |    322 |      2211 |       3170 |
+| hagl_fill_polygon()           |    178 |       221 |        315 |
+| hagl_put_char()               |  19664 |     19364 |      27753 |
+
 ## License
 
 The MIT License (MIT). Please see [LICENSE](LICENSE) for more information.
