@@ -42,6 +42,9 @@ extern "C" {
 
 typedef uint16_t color_t;
 
+#define hagl_hal_debug(fmt, ...) \
+    do { if (HAGL_HAL_DEBUG) printf("[HAGL HAL] " fmt, __VA_ARGS__); } while (0)
+
 #ifdef HAGL_HAL_USE_DOUBLE_BUFFER
 #include "hagl_hal_double.h"
 #else

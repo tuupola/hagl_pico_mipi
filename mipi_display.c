@@ -98,7 +98,8 @@ static void mipi_display_write_data_dma(const uint8_t *buffer, size_t length)
 
 static void mipi_display_dma_init()
 {
-    printf("HAGL HAL is using DMA.\r\n");
+    hagl_hal_debug("%s\n", "initialising DMA.");
+
     dma_channel = dma_claim_unused_channel(true);
     dma_channel_config channel_config = dma_channel_get_default_config(dma_channel);
     channel_config_set_transfer_data_size(&channel_config, DMA_SIZE_8);
@@ -155,6 +156,8 @@ static void mipi_display_set_address(uint16_t x1, uint16_t y1, uint16_t x2, uint
 
 static void mipi_display_spi_master_init()
 {
+    hagl_hal_debug("%s\n", "Initialising SPI.");
+
     gpio_set_function(MIPI_DISPLAY_PIN_DC, GPIO_FUNC_SIO);
     gpio_set_dir(MIPI_DISPLAY_PIN_DC, GPIO_OUT);
 
@@ -173,11 +176,18 @@ static void mipi_display_spi_master_init()
 
     spi_init(spi0, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
     uint32_t baud = spi_set_baudrate(spi0, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
-    printf("Baudrate set to %d \r\n", baud);
+
+    hagl_hal_debug("Baudrate is set to %d.\n", baud);
 }
 
 void mipi_display_init()
 {
+#ifdef HAGL_HAL_USE_DOUBLE_BUFFER
+    hagl_hal_debug("%s\n", "Initialising double buffered display.");
+#else
+    hagl_hal_debug("%s\n", "Initialising single buffered display.");
+#endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
+
     /* Init the spi driver. */
     mipi_display_spi_master_init();
     sleep_ms(100);
