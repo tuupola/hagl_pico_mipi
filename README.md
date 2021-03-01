@@ -6,7 +6,7 @@ HAL for HAGL graphics library for display drivers supporting the [MIPI Display C
 
 ## Usage
 
-To use with a Raspberry Pi Pico SDK project you include this HAL and the [HAGL graphics library](https://github.com/tuupola/hagl) itself.
+To use with a Raspberry Pi Pico SDK project you include this HAL and the [HAGL graphics library](https://github.com/tuupola/hagl) itself. For example applications see [Old School Demo Effects](https://github.com/tuupola/pico_effects) and [Graphics Speed Tests](https://github.com/tuupola/pico_effects).
 
 ```
 $ mkdir external
