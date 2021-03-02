@@ -68,11 +68,11 @@ void hagl_hal_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
 void hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
     static color_t line[DISPLAY_WIDTH];
-    color_t *ptr = line;
-    uint16_t height = 1;
+    const uint16_t height = 1;
 
     for (uint16_t x = 0; x < width; x++) {
-        *(ptr++) = color;
+        line[x] = color;
+
     }
 
     mipi_display_write(x0, y0, width, height, (uint8_t *) line);
@@ -81,11 +81,10 @@ void hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 void hagl_hal_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
     static color_t line[DISPLAY_HEIGHT];
-    color_t *ptr = line;
-    uint16_t width = 1;
+    const uint16_t width = 1;
 
-    for (uint16_t x = 0; x < height; x++) {
-        *(ptr++) = color;
+    for (uint16_t y = 0; y < height; y++) {
+        line[y] = color;
     }
 
     mipi_display_write(x0, y0, width, height, (uint8_t *) line);
