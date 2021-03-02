@@ -45,11 +45,13 @@ typedef uint16_t color_t;
 #define hagl_hal_debug(fmt, ...) \
     do { if (HAGL_HAL_DEBUG) printf("[HAGL HAL] " fmt, __VA_ARGS__); } while (0)
 
-#ifdef HAGL_HAL_USE_DOUBLE_BUFFER
+#if defined(HAGL_HAL_USE_TRIPLE_BUFFER)
+#include "hagl_hal_triple.h"
+#elif defined(HAGL_HAL_USE_DOUBLE_BUFFER)
 #include "hagl_hal_double.h"
 #else
 #include "hagl_hal_single.h"
-#endif
+#endif /* HAGL_HAL_USE_TRIPLE_BUFFER */
 
 /* Default config is ok for Pimoroni Pico Display Pack. When compiling */
 /* you can override these by including an user config header file first. */

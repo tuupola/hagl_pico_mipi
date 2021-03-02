@@ -31,9 +31,9 @@ SPDX-License-Identifier: MIT
 
 -cut-
 
-This is the HAL used when double buffering is enabled. The GRAM of the
-display driver chip is the framebuffer. The memory allocated by this HAL
-is the back buffer. Total two buffers.
+This is the HAL used when triple buffering is enabled. The GRAM of the
+display driver chip is the framebuffer. The two memory blocks allocated
+by this HAL are the two back buffers. Total three buffers.
 
 Note that all coordinates are already clipped in the main library itself.
 HAL does not need to validate the coordinates, they can alway be assumed
@@ -41,8 +41,8 @@ valid.
 
 */
 
-#ifndef _HAGL_HAL_DOUBLE_H
-#define _HAGL_HAL_DOUBLE_H
+#ifndef _HAGL_HAL_TRIPLE_H
+#define _HAGL_HAL_TRIPLE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,9 +52,9 @@ extern "C" {
 #include <bitmap.h>
 
 /* Define if header file included directly. */
-#ifndef HAGL_HAL_USE_DOUBLE_BUFFER
-#define HAGL_HAL_USE_DOUBLE_BUFFER
-#endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
+#ifndef HAGL_HAL_USE_TRIPLE_BUFFER
+#define HAGL_HAL_USE_TRIPLE_BUFFER
+#endif /* HAGL_HAL_USE_TRIPLE_BUFFER */
 
 #include "hagl_hal.h"
 
@@ -141,4 +141,4 @@ void hagl_hal_flush();
 #ifdef __cplusplus
 }
 #endif
-#endif /* _HAGL_HAL_DOUBLE_H */
+#endif /* _HAGL_HAL_TRIPLE_H */
