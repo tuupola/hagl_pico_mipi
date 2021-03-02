@@ -53,6 +53,8 @@ Below testing was done with Pimoroni Pico Display Pack. Double buffering refresh
 |-------------------------------|--------|-----------|------------|
 | hagl_put_pixel()              | 104919 |    229668 |     328069 |
 | hagl_draw_line()              |   1602 |     10688 |      15311 |
+| hagl_draw_vline()             |  36079 |     37557 |      53787 |
+| hagl_draw_hline()             |  36070 |     37622 |      54001 |
 | hagl_draw_circle()            |   1610 |     14925 |      21412 |
 | hagl_fill_circle()            |   1267 |      7201 |      10281 |
 | hagl_draw_ellipse()           |    965 |      8179 |      11696 |
