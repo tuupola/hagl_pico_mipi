@@ -33,7 +33,7 @@ SPDX-License-Identifier: MIT
 
 This is the HAL used when triple buffering is enabled. The GRAM of the
 display driver chip is the framebuffer. The two memory blocks allocated
-by this HAL are the two back buffer. Total three buffers.
+by this HAL are the two back buffers. Total three buffers.
 
 Note that all coordinates are already clipped in the main library itself.
 HAL does not need to validate the coordinates, they can alway be assumed
