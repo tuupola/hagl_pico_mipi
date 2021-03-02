@@ -182,10 +182,16 @@ static void mipi_display_spi_master_init()
 
 void mipi_display_init()
 {
+#ifdef HAGL_HAL_USE_SINGLE_BUFFER
+    hagl_hal_debug("%s\n", "Initialising single buffered display.");
+#endif /* HAGL_HAL_USE_SINGLE_BUFFER */
+
 #ifdef HAGL_HAL_USE_DOUBLE_BUFFER
     hagl_hal_debug("%s\n", "Initialising double buffered display.");
-#else
-    hagl_hal_debug("%s\n", "Initialising single buffered display.");
+#endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
+
+#ifdef HAGL_HAL_USE_TRIPLE_BUFFER
+    hagl_hal_debug("%s\n", "Initialising triple buffered display.");
 #endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
 
     /* Init the spi driver. */
@@ -236,11 +242,11 @@ void mipi_display_init()
     /* Set the default viewport to full screen. */
     mipi_display_set_address(0, 0, MIPI_DISPLAY_WIDTH - 1, MIPI_DISPLAY_HEIGHT - 1);
 
-#ifdef HAGL_HAL_USE_DOUBLE_BUFFER
+#ifdef HAGL_HAS_HAL_BACK_BUFFER
 #ifdef HAGL_HAL_USE_DMA
     mipi_display_dma_init();
 #endif /* HAGL_HAL_USE_DMA */
-#endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
+#endif /* HAGL_HAS_HAL_BACK_BUFFER */
 }
 
 void mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_t *buffer)
@@ -258,14 +264,14 @@ void mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_
     mipi_display_write_data(buffer, size * DISPLAY_DEPTH / 8);
 #endif /* HAGL_HAL_SINGLE_BUFFER */
 
-#ifdef HAGL_HAL_USE_DOUBLE_BUFFER
-    mipi_display_set_address(x1, y1, x2, y2);
+#ifdef HAGL_HAS_HAL_BACK_BUFFER
+    //mipi_display_set_address(x1, y1, x2, y2);
 #ifdef HAGL_HAL_USE_DMA
     mipi_display_write_data_dma(buffer, size * DISPLAY_DEPTH / 8);
 #else
     mipi_display_write_data(buffer, size * DISPLAY_DEPTH / 8);
 #endif /* HAGL_HAL_USE_DMA */
-#endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
+#endif /* HAGL_HAS_HAL_BACK_BUFFER */
 }
 
 /* TODO: This most likely does not work with dma atm. */
