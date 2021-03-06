@@ -58,25 +58,24 @@ The default config can be found in `hagl_hal.h`. Defaults are ok for [Pimoroni P
 
 ## Configuration
 
-You can override any of the default settings setting in `CMakeLists.txt`. You only need to override a value if default is not ok. Below example shows all the possible overridable values.
+You can override any of the default settings setting in `CMakeLists.txt`. You only need to override a value if default is not ok. Below example shows all the possible overridable values. These are also the default values.
 
 ```
 target_compile_definitions(firmware PRIVATE
   MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ=64000000
   MIPI_DISPLAY_PIN_CS=17
   MIPI_DISPLAY_PIN_DC=16
-  MIPI_DISPLAY_PIN_RST=21
+  MIPI_DISPLAY_PIN_RST=-1
   MIPI_DISPLAY_PIN_BL=20
   MIPI_DISPLAY_PIN_CLK=18
   MIPI_DISPLAY_PIN_MOSI=19
   MIPI_DISPLAY_PIN_MISO=-1
   MIPI_DISPLAY_PIXEL_FORMAT=MIPI_DCS_PIXEL_FORMAT_16BIT
-  MIPI_DISPLAY_ADDRESS_MODE=MIPI_DCS_ADDRESS_MODE_BGR
-  MIPI_DISPLAY_WIDTH=128
-  MIPI_DISPLAY_HEIGHT=128
-  MIPI_DISPLAY_DEPTH=16
-  MIPI_DISPLAY_OFFSET_X=0
-  MIPI_DISPLAY_OFFSET_Y=0
+  MIPI_DISPLAY_ADDRESS_MODE=MIPI_DCS_ADDRESS_MODE_RGB
+  MIPI_DISPLAY_WIDTH=135
+  MIPI_DISPLAY_HEIGHT=240
+  MIPI_DISPLAY_OFFSET_X=52
+  MIPI_DISPLAY_OFFSET_Y=40
   MIPI_DISPLAY_INVERT=0
 )
 ```
