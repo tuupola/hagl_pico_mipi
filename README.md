@@ -110,6 +110,33 @@ target_compile_definitions(firmware PRIVATE
 
 You can `OR` together as many flags as you want. Not all combinations make sense but any display orientation can be achieved with correct combination of the flags. When in doubt just try different combinations.
 
+## Common problems
+
+If red and blue are mixed but green is ok change to BGR mode.
+
+```
+target_compile_definitions(firmware PRIVATE
+  MIPI_DISPLAY_ADDRESS_MODE=MIPI_DCS_ADDRESS_MODE_BGR
+)
+```
+
+If display seems inverted turn of the inversion.
+
+```
+target_compile_definitions(firmware PRIVATE
+  MIPI_DISPLAY_INVERT=0
+)
+```
+
+If image is not center on screen adjust X and Y offsets as needed.
+
+```
+target_compile_definitions(firmware PRIVATE
+  MIPI_DISPLAY_OFFSET_X=25
+  MIPI_DISPLAY_OFFSET_Y=30
+)
+```
+
 ## Speed
 
 Below testing was done with Pimoroni Pico Display Pack. Double buffering refresh rate was set to 30 frames per second. Number represents operations per seconsd ie. bigger number is better.
