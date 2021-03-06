@@ -28,7 +28,6 @@ By default the HAL uses single buffering. The buffer is the GRAM of the display 
 
 ```
 target_compile_definitions(firmware PRIVATE
-  NO_MENUCONFIG
   HAGL_HAL_USE_DOUBLE_BUFFER
 )
 ```
@@ -37,7 +36,6 @@ By default flushing from back buffer to front buffer is a locking operation. You
 
 ```
 target_compile_definitions(firmware PRIVATE
-  NO_MENUCONFIG
   HAGL_HAL_USE_DOUBLE_BUFFER
   HAGL_HAL_USE_DMA
 )
@@ -48,7 +46,6 @@ Alternatively you can also use triple buffering. This is the fastest and will no
 
 ```
 target_compile_definitions(firmware PRIVATE
-  NO_MENUCONFIG
   HAGL_HAL_USE_TRIPLE_BUFFER
   HAGL_HAL_USE_DMA
 )
