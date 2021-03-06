@@ -1,12 +1,12 @@
 # MIPI DCS HAL for HAGL Graphics Library
 
-HAL for HAGL graphics library for display drivers supporting the [MIPI Display Command Set](https://www.mipi.org/specifications/display-command-set). This covers most displays currently used by hobbyists. Tested with ST7789 (Pimoroni Pico Display Pack) and ILI9163.
+HAL for HAGL graphics library for display drivers supporting the [MIPI Display Command Set](https://www.mipi.org/specifications/display-command-set) standard. This covers most displays currently used by hobbyists. Tested with ST7789 (Pimoroni Pico Display Pack) and ILI9163.
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
 ## Usage
 
-To use with a Raspberry Pi Pico SDK project you include this HAL and the [HAGL graphics library](https://github.com/tuupola/hagl) itself. For example applications see [Old School Demo Effects](https://github.com/tuupola/pico_effects) and [Graphics Speed Tests](https://github.com/tuupola/pico_effects).
+To use with a Raspberry Pi Pico SDK project you include this HAL and the [HAGL graphics library](https://github.com/tuupola/hagl) itself. For example applications see [Old School Demo Effects](https://github.com/tuupola/pico_effects) and [Graphics Speed Tests](https://github.com/tuupola/pico_effects). If in a hurry check a [video instead](https://vimeo.com/510236080).
 
 ```
 $ mkdir external
