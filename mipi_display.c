@@ -221,6 +221,7 @@ void mipi_display_init()
 
 #ifdef MIPI_DISPLAY_INVERT
     mipi_display_write_command(MIPI_DCS_ENTER_INVERT_MODE);
+    hagl_hal_debug("%s\n", "Inverting display.");
 #else
     mipi_display_write_command(MIPI_DCS_EXIT_INVERT_MODE);
 #endif
