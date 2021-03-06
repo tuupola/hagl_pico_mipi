@@ -67,7 +67,7 @@ typedef uint16_t color_t;
 #define MIPI_DISPLAY_PIN_DC         (16)
 #endif
 #ifndef MIPI_DISPLAY_PIN_RST
-#define MIPI_DISPLAY_PIN_RST        (30)
+#define MIPI_DISPLAY_PIN_RST        (-1)
 #endif
 #ifndef MIPI_DISPLAY_PIN_BL
 #define MIPI_DISPLAY_PIN_BL         (20)
