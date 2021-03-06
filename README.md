@@ -54,7 +54,7 @@ target_compile_definitions(firmware PRIVATE
 )
 ```
 
-The default config can be found in `hagl_hal.h`. Defaults are ok for Pimoroni Pico Display Pack in vertical mode.
+The default config can be found in `hagl_hal.h`. Defaults are ok for [Pimoroni Pico Display Pack](https://shop.pimoroni.com/products/pico-display-pack) in vertical mode.
 
 ## Configuration
 
