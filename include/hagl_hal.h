@@ -87,9 +87,14 @@ typedef uint16_t color_t;
 #ifndef MIPI_DISPLAY_ADDRESS_MODE
 #define MIPI_DISPLAY_ADDRESS_MODE   (MIPI_DCS_ADDRESS_MODE_RGB)
 #endif
+
+/* Default to invert because Pimoroni Pico Display Pack needs it. */
 #ifndef MIPI_DISPLAY_INVERT
 #define MIPI_DISPLAY_INVERT
+#elif MIPI_DISPLAY_INVERT == 0
+#undef MIPI_DISPLAY_INVERT
 #endif
+
 #ifndef MIPI_DISPLAY_WIDTH
 #define MIPI_DISPLAY_WIDTH          (135)
 #endif
