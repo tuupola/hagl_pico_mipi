@@ -56,6 +56,64 @@ target_compile_definitions(firmware PRIVATE
 
 The default config can be found in `hagl_hal.h`. Defaults are ok for Pimoroni Pico Display Pack in vertical mode.
 
+## Configuration
+
+You can override any of the default settings setting in `CMakeLists.txt`. You only need to override a value if default is not ok. Below example shows all the possible overridable values.
+
+```
+target_compile_definitions(firmware PRIVATE
+  MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ=64000000
+  MIPI_DISPLAY_PIN_CS=17
+  MIPI_DISPLAY_PIN_DC=16
+  MIPI_DISPLAY_PIN_RST=21
+  MIPI_DISPLAY_PIN_BL=20
+  MIPI_DISPLAY_PIN_CLK=18
+  MIPI_DISPLAY_PIN_MOSI=19
+  MIPI_DISPLAY_PIN_MISO=-1
+  MIPI_DISPLAY_PIXEL_FORMAT=MIPI_DCS_PIXEL_FORMAT_16BIT
+  MIPI_DISPLAY_ADDRESS_MODE=MIPI_DCS_ADDRESS_MODE_BGR
+  MIPI_DISPLAY_WIDTH=128
+  MIPI_DISPLAY_HEIGHT=128
+  MIPI_DISPLAY_DEPTH=16
+  MIPI_DISPLAY_OFFSET_X=0
+  MIPI_DISPLAY_OFFSET_Y=0
+  MIPI_DISPLAY_INVERT=0
+)
+```
+
+`MIPI_DISPLAY_ADDRESS_MODE` controls the orientation and the RGB order of the display. The value is a bit field which can consist of the following flags defined in `mipi_dcs.h`.
+
+```
+#define MIPI_DCS_ADDRESS_MODE_MIRROR_Y      0x80
+#define MIPI_DCS_ADDRESS_MODE_MIRROR_X      0x40
+#define MIPI_DCS_ADDRESS_MODE_SWAP_XY       0x20
+#define MIPI_DCS_ADDRESS_MODE_BGR           0x08
+#define MIPI_DCS_ADDRESS_MODE_RGB           0x00
+#define MIPI_DCS_ADDRESS_MODE_FLIP_X        0x02
+#define MIPI_DCS_ADDRESS_MODE_FLIP_Y        0x01
+```
+
+You should `OR` together the flags you want to use. For example if you have a 135x240 pixel display on vertical mode.
+
+```
+target_compile_definitions(firmware PRIVATE
+  MIPI_DISPLAY_WIDTH=135
+  MIPI_DISPLAY_HEIGHT=240
+)
+```
+
+You can change it to 240x135 pixel vertical mode by swapping the X and Y coordinates. You will also need to mirror Y axis.
+
+```
+target_compile_definitions(firmware PRIVATE
+  MIPI_DISPLAY_ADDRESS_MODE=MIPI_DCS_ADDRESS_MODE_SWAP_XY|MIPI_DCS_ADDRESS_MODE_MIRROR_Y
+  MIPI_DISPLAY_WIDTH=240
+  MIPI_DISPLAY_HEIGHT=135
+)
+```
+
+You can `OR` together as many flags as you want. Not all combinations make sense but any display orientation can be achieved with correct combination of the flags. When in doubt just try different combinations.
+
 ## Speed
 
 Below testing was done with Pimoroni Pico Display Pack. Double buffering refresh rate was set to 30 frames per second. Number represents operations per seconsd ie. bigger number is better.
