@@ -77,7 +77,7 @@ bitmap_t *hagl_hal_init(void)
     return &bb;
 }
 
-void hagl_hal_flush()
+size_t hagl_hal_flush()
 {
     uint8_t *buffer = bb.buffer;
     if (bb.buffer == buffer1) {
@@ -86,7 +86,7 @@ void hagl_hal_flush()
         bb.buffer = buffer1;
     }
     /* Flush the current back buffer. */
-    mipi_display_write(0, 0, bb.width, bb.height, (uint8_t *) buffer);
+    return mipi_display_write(0, 0, bb.width, bb.height, (uint8_t *) buffer);
 }
 
 void hagl_hal_put_pixel(int16_t x0, int16_t y0, color_t color)
