@@ -274,7 +274,7 @@ size_t mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint
 #endif /* HAGL_HAL_USE_DMA */
 #endif /* HAGL_HAS_HAL_BACK_BUFFER */
     /* This should also include the bytes for writing the commands. */
-    return size;
+    return size * DISPLAY_DEPTH / 8;
 }
 
 /* TODO: This most likely does not work with dma atm. */
