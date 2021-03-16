@@ -49,6 +49,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stddef.h>
 #include <bitmap.h>
 
 /* Define if header file included directly. */
@@ -136,7 +137,7 @@ void hagl_hal_vline(int16_t x0, int16_t y0, uint16_t h, color_t color);
 /**
  * Flush back buffer to the display
  */
-void hagl_hal_flush();
+size_t hagl_hal_flush();
 
 #ifdef __cplusplus
 }

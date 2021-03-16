@@ -250,10 +250,10 @@ void mipi_display_init()
 #endif /* HAGL_HAS_HAL_BACK_BUFFER */
 }
 
-void mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_t *buffer)
+size_t mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_t *buffer)
 {
     if (0 == w || 0 == h) {
-        return;
+        return 0;
     }
 
     int32_t x2 = x1 + w - 1;
@@ -273,6 +273,8 @@ void mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_
     mipi_display_write_data(buffer, size * DISPLAY_DEPTH / 8);
 #endif /* HAGL_HAL_USE_DMA */
 #endif /* HAGL_HAS_HAL_BACK_BUFFER */
+    /* This should also include the bytes for writing the commands. */
+    return size * DISPLAY_DEPTH / 8;
 }
 
 /* TODO: This most likely does not work with dma atm. */
