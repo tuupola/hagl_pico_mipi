@@ -34,7 +34,7 @@ SPDX-License-Identifier: MIT
 #include <sys/times.h>
 #include <pico/stdlib.h>
 
-clock_t _times (struct tms *buffer)
+clock_t _times(struct tms *buffer)
 {
     /* Should be a 100Hz tick. Probably because by default arm libgloss */
     /* assumes usage of SWI_Clock which is in centiseconds. */
