@@ -65,18 +65,7 @@ static bitmap_t bb = {
     .depth = DISPLAY_DEPTH,
 };
 
-bitmap_t *hagl_hal_init(void)
-{
-    mipi_display_init();
-    bitmap_init(&bb, buffer2);
-    bitmap_init(&bb, buffer1);
-
-    hagl_hal_debug("Back buffer 1 address is %p\n", (void *) buffer1);
-    hagl_hal_debug("Back buffer 2 address is %p\n", (void *) buffer2);
-
-    return &bb;
-}
-
+static
 size_t hagl_hal_flush()
 {
     uint8_t *buffer = bb.buffer;
@@ -89,28 +78,33 @@ size_t hagl_hal_flush()
     return mipi_display_write(0, 0, bb.width, bb.height, (uint8_t *) buffer);
 }
 
-void hagl_hal_put_pixel(int16_t x0, int16_t y0, color_t color)
+static void
+hagl_hal_put_pixel(int16_t x0, int16_t y0, color_t color)
 {
     color_t *ptr = (color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
     *ptr = color;
 }
 
-color_t hagl_hal_get_pixel(int16_t x0, int16_t y0)
+static color_t
+hagl_hal_get_pixel(int16_t x0, int16_t y0)
 {
     return *(color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
 }
 
-void hagl_hal_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
+static void
+hagl_hal_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
 {
     bitmap_blit(x0, y0, src, &bb);
 }
 
-void hagl_hal_scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
+static void
+hagl_hal_scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
 {
     bitmap_scale_blit(x0, y0, w, h, src, &bb);
 }
 
-void hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
+static void
+hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
     color_t *ptr = (color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
     for (uint16_t x = 0; x < width; x++) {
@@ -118,13 +112,39 @@ void hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
     }
 }
 
-void hagl_hal_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
+static void
+hagl_hal_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
     color_t *ptr = (color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
     for (uint16_t y = 0; y < height; y++) {
         *ptr = color;
         ptr += bb.pitch / (bb.depth / 8);
     }
+}
+
+hagl_backend_t
+*hagl_hal_init(void)
+{
+    mipi_display_init();
+    bitmap_init(&bb, buffer2);
+    bitmap_init(&bb, buffer1);
+
+    hagl_hal_debug("Back buffer 1 address is %p\n", (void *) buffer1);
+    hagl_hal_debug("Back buffer 2 address is %p\n", (void *) buffer2);
+
+    static hagl_backend_t backend;
+
+    memset(&backend, 0, sizeof(hagl_backend_t));
+
+    backend.width = DISPLAY_WIDTH;
+    backend.height = DISPLAY_HEIGHT;
+    backend.put_pixel = hagl_hal_put_pixel;
+    backend.get_pixel = hagl_hal_get_pixel;
+    backend.flush = hagl_hal_flush;
+    backend.close = NULL;
+    backend.color = NULL;
+
+    return &backend;
 }
 
 #endif /* HAGL_HAL_USE_TRIPLE_BUFFER */

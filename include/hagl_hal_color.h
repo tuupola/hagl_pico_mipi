@@ -29,49 +29,20 @@ https://github.com/tuupola/hagl_pico_mipi
 
 SPDX-License-Identifier: MIT
 
--cut-
-
-This is the HAL used when buffering is disabled. I call this single buffered
-since I consider the GRAM of the display driver chip to be the framebuffer.
-
-Note that all coordinates are already clipped in the main library itself.
-HAL does not need to validate the coordinates, they can alway be assumed
-valid.
-
 */
 
-#ifndef _HAGL_HAL_SINGLE_H
-#define _HAGL_HAL_SINGLE_H
+#ifndef _HAGL_PICO_HAL_COLOR_H
+#define _HAGL_PICO_HAL_COLOR_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stdint.h>
-#include <backend.h>
 
-/* Define if header file included directly. */
-#ifndef HAGL_HAL_USE_SINGLE_BUFFER
-#define HAGL_HAL_USE_SINGLE_BUFFER
-#endif /* HAGL_HAL_USE_SINGLE_BUFFER */
-
-#include "hagl_hal.h"
-
-#define HAGL_HAS_HAL_INIT
-// #define HAGL_HAS_HAL_BLIT
-// #define HAGL_HAS_HAL_HLINE
-// #define HAGL_HAS_HAL_VLINE
-
-/**
- * Initialize the HAL
- *
- * This HAL returns null since it does not use buffering.
- *
- * @return NULL
- */
-hagl_backend_t *hagl_hal_init(void);
+typedef uint16_t color_t;
 
 #ifdef __cplusplus
 }
 #endif
-#endif /* _HAGL_HAL_SINGLE_H */
+#endif /* _HAGL_PICO_HAL_COLOR_H */

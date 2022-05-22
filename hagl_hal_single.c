@@ -45,27 +45,26 @@ valid.
 #ifdef HAGL_HAL_USE_SINGLE_BUFFER
 
 #include <bitmap.h>
+#include <backend.h>
 #include <hagl.h>
+#include <string.h>
 
 #include "mipi_display.h"
 
-bitmap_t *hagl_hal_init(void)
-{
-    mipi_display_init();
-    return NULL;
-}
-
-void hagl_hal_put_pixel(int16_t x0, int16_t y0, color_t color)
+static void
+hagl_hal_put_pixel(int16_t x0, int16_t y0, color_t color)
 {
     mipi_display_write(x0, y0, 1, 1, (uint8_t *) &color);
 }
 
-void hagl_hal_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
+static void
+hagl_hal_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
 {
     mipi_display_write(x0, y0, src->width, src->height, (uint8_t *) src->buffer);
 }
 
-void hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
+static void
+hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
     static color_t line[DISPLAY_WIDTH];
     const uint16_t height = 1;
@@ -78,7 +77,8 @@ void hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
     mipi_display_write(x0, y0, width, height, (uint8_t *) line);
 }
 
-void hagl_hal_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
+static void
+hagl_hal_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
     static color_t line[DISPLAY_HEIGHT];
     const uint16_t width = 1;
@@ -88,6 +88,25 @@ void hagl_hal_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
     }
 
     mipi_display_write(x0, y0, width, height, (uint8_t *) line);
+}
+
+hagl_backend_t *hagl_hal_init(void)
+{
+    mipi_display_init();
+
+    static hagl_backend_t backend;
+
+    memset(&backend, 0, sizeof(hagl_backend_t));
+
+    backend.width = DISPLAY_WIDTH;
+    backend.height = DISPLAY_HEIGHT;
+    backend.put_pixel = hagl_hal_put_pixel;
+    backend.get_pixel = NULL;
+    backend.flush = NULL;
+    backend.close = NULL;
+    backend.color = NULL;
+
+    return &backend;
 }
 
 #endif /* HAGL_HAL_USE_SINGLE_BUFFER */
