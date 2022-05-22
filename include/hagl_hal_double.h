@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) 2019-2021 Mika Tuupola
+Copyright (c) 2019-2022 Mika Tuupola
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,20 +24,20 @@ SOFTWARE.
 
 -cut-
 
-This file is part of the Raspberry Pi Pico HAL for the HAGL graphics library:
-https://github.com/tuupola/hagl_pico_mipi
+This file is part of the Raspberry Pi Pico MIPI DCS backend for the HAGL
+graphics library: https://github.com/tuupola/hagl_pico_mipi
 
 SPDX-License-Identifier: MIT
 
 -cut-
 
-This is the HAL used when double buffering is enabled. The GRAM of the
-display driver chip is the framebuffer. The memory allocated by this HAL
-is the back buffer. Total two buffers.
+This backend uses double buffering. The GRAM of the display driver chip
+is the framebuffer. This backend has the backbuffer. There is total two
+buffers, hence double buffering.
 
 Note that all coordinates are already clipped in the main library itself.
-HAL does not need to validate the coordinates, they can alway be assumed
-valid.
+Backend does not need to validate the coordinates, they can alway be
+assumed valid.
 
 */
 

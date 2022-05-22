@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) 2019-2021 Mika Tuupola
+Copyright (c) 2019-2022 Mika Tuupola
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@ SOFTWARE.
 
 -cut-
 
-This file is part of the Raspberry Pi Pico backend for the HAGL graphics library:
-https://github.com/tuupola/hagl_pico_mipi
+This file is part of the Raspberry Pi Pico MIPI DCS backend for the HAGL
+graphics library: https://github.com/tuupola/hagl_pico_mipi
 
 SPDX-License-Identifier: MIT
 
