@@ -129,6 +129,8 @@ hagl_hal_init(void)
     backend.height = DISPLAY_HEIGHT;
     backend.put_pixel = hagl_hal_put_pixel;
     backend.get_pixel = hagl_hal_get_pixel;
+    backend.hline = hagl_hal_hline;
+    backend.vline = hagl_hal_vline;
     backend.flush = hagl_hal_flush;
     backend.close = NULL;
     backend.color = NULL;
