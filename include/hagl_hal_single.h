@@ -57,11 +57,6 @@ extern "C" {
 
 #include "hagl_hal.h"
 
-#define HAGL_HAS_HAL_INIT
-// #define HAGL_HAS_HAL_BLIT
-// #define HAGL_HAS_HAL_HLINE
-// #define HAGL_HAS_HAL_VLINE
-
 /**
  * Initialize the HAL
  *
