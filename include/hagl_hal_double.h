@@ -61,13 +61,6 @@ extern "C" {
 #include "hagl_hal.h"
 
 #define HAGL_HAS_HAL_BACK_BUFFER
-#define HAGL_HAS_HAL_INIT
-// #define HAGL_HAS_HAL_BLIT
-// #define HAGL_HAS_HAL_SCALE_BLIT
-// #define HAGL_HAS_HAL_HLINE
-// #define HAGL_HAS_HAL_VLINE
-#define HAGL_HAS_HAL_FLUSH
-#define HAGL_HAS_HAL_GET_PIXEL
 
 /**
  * Initialize the HAL
