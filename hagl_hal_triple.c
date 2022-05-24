@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) 2019-2021 Mika Tuupola
+Copyright (c) 2019-2022 Mika Tuupola
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@ SOFTWARE.
 
 -cut-
 
-This file is part of the Raspberry Pi Pico HAL for the HAGL graphics library:
-https://github.com/tuupola/hagl_pico_mipi
+This file is part of the Raspberry Pi Pico MIPI DCS backend for the HAGL
+graphics library: https://github.com/tuupola/hagl_pico_mipi
 
 SPDX-License-Identifier: MIT
 
@@ -65,19 +65,8 @@ static bitmap_t bb = {
     .depth = DISPLAY_DEPTH,
 };
 
-bitmap_t *hagl_hal_init(void)
-{
-    mipi_display_init();
-    bitmap_init(&bb, buffer2);
-    bitmap_init(&bb, buffer1);
-
-    hagl_hal_debug("Back buffer 1 address is %p\n", (void *) buffer1);
-    hagl_hal_debug("Back buffer 2 address is %p\n", (void *) buffer2);
-
-    return &bb;
-}
-
-size_t hagl_hal_flush()
+static
+size_t triple_flush()
 {
     uint8_t *buffer = bb.buffer;
     if (bb.buffer == buffer1) {
@@ -89,28 +78,33 @@ size_t hagl_hal_flush()
     return mipi_display_write(0, 0, bb.width, bb.height, (uint8_t *) buffer);
 }
 
-void hagl_hal_put_pixel(int16_t x0, int16_t y0, color_t color)
+static void
+triple_put_pixel(int16_t x0, int16_t y0, color_t color)
 {
     color_t *ptr = (color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
     *ptr = color;
 }
 
-color_t hagl_hal_get_pixel(int16_t x0, int16_t y0)
+static color_t
+triple_get_pixel(int16_t x0, int16_t y0)
 {
     return *(color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
 }
 
-void hagl_hal_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
+static void
+triple_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
 {
     bitmap_blit(x0, y0, src, &bb);
 }
 
-void hagl_hal_scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
+static void
+triple_scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
 {
     bitmap_scale_blit(x0, y0, w, h, src, &bb);
 }
 
-void hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
+static void
+triple_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
     color_t *ptr = (color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
     for (uint16_t x = 0; x < width; x++) {
@@ -118,13 +112,41 @@ void hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
     }
 }
 
-void hagl_hal_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
+static void
+triple_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
     color_t *ptr = (color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
     for (uint16_t y = 0; y < height; y++) {
         *ptr = color;
         ptr += bb.pitch / (bb.depth / 8);
     }
+}
+
+hagl_backend_t *
+hagl_hal_init(void)
+{
+    mipi_display_init();
+    bitmap_init(&bb, buffer2);
+    bitmap_init(&bb, buffer1);
+
+    hagl_hal_debug("Back buffer 1 address is %p\n", (void *) buffer1);
+    hagl_hal_debug("Back buffer 2 address is %p\n", (void *) buffer2);
+
+    static hagl_backend_t backend;
+
+    memset(&backend, 0, sizeof(hagl_backend_t));
+
+    backend.width = DISPLAY_WIDTH;
+    backend.height = DISPLAY_HEIGHT;
+    backend.put_pixel = triple_put_pixel;
+    backend.get_pixel = triple_get_pixel;
+    backend.hline = triple_hline;
+    backend.vline = triple_vline;
+    backend.flush = triple_flush;
+    backend.close = NULL;
+    backend.color = NULL;
+
+    return &backend;
 }
 
 #endif /* HAGL_HAL_USE_TRIPLE_BUFFER */
