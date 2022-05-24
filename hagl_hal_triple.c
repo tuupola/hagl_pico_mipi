@@ -66,7 +66,7 @@ static bitmap_t bb = {
 };
 
 static
-size_t hagl_hal_flush()
+size_t triple_flush()
 {
     uint8_t *buffer = bb.buffer;
     if (bb.buffer == buffer1) {
@@ -79,32 +79,32 @@ size_t hagl_hal_flush()
 }
 
 static void
-hagl_hal_put_pixel(int16_t x0, int16_t y0, color_t color)
+triple_put_pixel(int16_t x0, int16_t y0, color_t color)
 {
     color_t *ptr = (color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
     *ptr = color;
 }
 
 static color_t
-hagl_hal_get_pixel(int16_t x0, int16_t y0)
+triple_get_pixel(int16_t x0, int16_t y0)
 {
     return *(color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
 }
 
 static void
-hagl_hal_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
+triple_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
 {
     bitmap_blit(x0, y0, src, &bb);
 }
 
 static void
-hagl_hal_scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
+triple_scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
 {
     bitmap_scale_blit(x0, y0, w, h, src, &bb);
 }
 
 static void
-hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
+triple_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
     color_t *ptr = (color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
     for (uint16_t x = 0; x < width; x++) {
@@ -113,7 +113,7 @@ hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 }
 
 static void
-hagl_hal_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
+triple_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
     color_t *ptr = (color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
     for (uint16_t y = 0; y < height; y++) {
@@ -122,8 +122,8 @@ hagl_hal_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
     }
 }
 
-hagl_backend_t
-*hagl_hal_init(void)
+hagl_backend_t *
+hagl_hal_init(void)
 {
     mipi_display_init();
     bitmap_init(&bb, buffer2);
@@ -138,11 +138,11 @@ hagl_backend_t
 
     backend.width = DISPLAY_WIDTH;
     backend.height = DISPLAY_HEIGHT;
-    backend.put_pixel = hagl_hal_put_pixel;
-    backend.get_pixel = hagl_hal_get_pixel;
-    backend.hline = hagl_hal_hline;
-    backend.vline = hagl_hal_vline;
-    backend.flush = hagl_hal_flush;
+    backend.put_pixel = triple_put_pixel;
+    backend.get_pixel = triple_get_pixel;
+    backend.hline = triple_hline;
+    backend.vline = triple_vline;
+    backend.flush = triple_flush;
     backend.close = NULL;
     backend.color = NULL;
 

@@ -65,39 +65,39 @@ static bitmap_t fb = {
 };
 
 static size_t
-hagl_hal_flush()
+double_flush()
 {
     /* Flush the whole back buffer. */
     return mipi_display_write(0, 0, fb.width, fb.height, (uint8_t *) fb.buffer);
 }
 
 static void
-hagl_hal_put_pixel(int16_t x0, int16_t y0, color_t color)
+double_put_pixel(int16_t x0, int16_t y0, color_t color)
 {
     color_t *ptr = (color_t *) (fb.buffer + fb.pitch * y0 + (fb.depth / 8) * x0);
     *ptr = color;
 }
 
 static color_t
-hagl_hal_get_pixel(int16_t x0, int16_t y0)
+double_get_pixel(int16_t x0, int16_t y0)
 {
     return *(color_t *) (fb.buffer + fb.pitch * y0 + (fb.depth / 8) * x0);
 }
 
 static void
-hagl_hal_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
+double_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
 {
     bitmap_blit(x0, y0, src, &fb);
 }
 
 static void
-hagl_hal_scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
+double_scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
 {
     bitmap_scale_blit(x0, y0, w, h, src, &fb);
 }
 
 static void
-hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
+double_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
     color_t *ptr = (color_t *) (fb.buffer + fb.pitch * y0 + (fb.depth / 8) * x0);
     for (uint16_t x = 0; x < width; x++) {
@@ -106,7 +106,7 @@ hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 }
 
 static void
-hagl_hal_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
+double_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
     color_t *ptr = (color_t *) (fb.buffer + fb.pitch * y0 + (fb.depth / 8) * x0);
     for (uint16_t y = 0; y < height; y++) {
@@ -127,11 +127,11 @@ hagl_hal_init(void)
 
     backend.width = DISPLAY_WIDTH;
     backend.height = DISPLAY_HEIGHT;
-    backend.put_pixel = hagl_hal_put_pixel;
-    backend.get_pixel = hagl_hal_get_pixel;
-    backend.hline = hagl_hal_hline;
-    backend.vline = hagl_hal_vline;
-    backend.flush = hagl_hal_flush;
+    backend.put_pixel = double_put_pixel;
+    backend.get_pixel = double_get_pixel;
+    backend.hline = double_hline;
+    backend.vline = double_vline;
+    backend.flush = double_flush;
     backend.close = NULL;
     backend.color = NULL;
 

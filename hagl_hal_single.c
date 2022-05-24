@@ -52,19 +52,19 @@ valid.
 #include "mipi_display.h"
 
 static void
-hagl_hal_put_pixel(int16_t x0, int16_t y0, color_t color)
+single_put_pixel(int16_t x0, int16_t y0, color_t color)
 {
     mipi_display_write(x0, y0, 1, 1, (uint8_t *) &color);
 }
 
 static void
-hagl_hal_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
+single_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
 {
     mipi_display_write(x0, y0, src->width, src->height, (uint8_t *) src->buffer);
 }
 
 static void
-hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
+single_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
     static color_t line[DISPLAY_WIDTH];
     const uint16_t height = 1;
@@ -78,7 +78,7 @@ hagl_hal_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 }
 
 static void
-hagl_hal_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
+single_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
     static color_t line[DISPLAY_HEIGHT];
     const uint16_t width = 1;
@@ -90,7 +90,8 @@ hagl_hal_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
     mipi_display_write(x0, y0, width, height, (uint8_t *) line);
 }
 
-hagl_backend_t *hagl_hal_init(void)
+hagl_backend_t *
+hagl_hal_init(void)
 {
     mipi_display_init();
 
@@ -100,10 +101,10 @@ hagl_backend_t *hagl_hal_init(void)
 
     backend.width = DISPLAY_WIDTH;
     backend.height = DISPLAY_HEIGHT;
-    backend.put_pixel = hagl_hal_put_pixel;
+    backend.put_pixel = single_put_pixel;
     backend.get_pixel = NULL;
-    backend.hline = hagl_hal_hline;
-    backend.vline = hagl_hal_vline;
+    backend.hline = single_hline;
+    backend.vline = single_vline;
     backend.flush = NULL;
     backend.close = NULL;
     backend.color = NULL;
