@@ -99,8 +99,8 @@ hagl_hal_init(void)
 
     memset(&backend, 0, sizeof(hagl_backend_t));
 
-    backend.width = DISPLAY_WIDTH;
-    backend.height = DISPLAY_HEIGHT;
+    backend.width = MIPI_DISPLAY_WIDTH;
+    backend.height = MIPI_DISPLAY_HEIGHT;
     backend.put_pixel = single_put_pixel;
     backend.get_pixel = NULL;
     backend.hline = single_hline;

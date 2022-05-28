@@ -81,14 +81,13 @@ size_t triple_flush()
 static void
 triple_put_pixel(int16_t x0, int16_t y0, color_t color)
 {
-    color_t *ptr = (color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
-    *ptr = color;
+    bitmap_put_pixel(&bb, x0, y0, color);
 }
 
 static color_t
 triple_get_pixel(int16_t x0, int16_t y0)
 {
-    return *(color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
+    return bitmap_get_pixel(&bb, x0, y0);
 }
 
 static void
@@ -106,20 +105,13 @@ triple_scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *sr
 static void
 triple_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
-    color_t *ptr = (color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
-    for (uint16_t x = 0; x < width; x++) {
-        *ptr++ = color;
-    }
+    bitmap_hline(&bb, x0, y0, width, color);
 }
 
 static void
 triple_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
-    color_t *ptr = (color_t *) (bb.buffer + bb.pitch * y0 + (bb.depth / 8) * x0);
-    for (uint16_t y = 0; y < height; y++) {
-        *ptr = color;
-        ptr += bb.pitch / (bb.depth / 8);
-    }
+    bitmap_vline(&bb, x0, y0, height, color);
 }
 
 hagl_backend_t *
@@ -136,8 +128,8 @@ hagl_hal_init(void)
 
     memset(&backend, 0, sizeof(hagl_backend_t));
 
-    backend.width = DISPLAY_WIDTH;
-    backend.height = DISPLAY_HEIGHT;
+    backend.width = MIPI_DISPLAY_WIDTH;
+    backend.height = MIPI_DISPLAY_HEIGHT;
     backend.put_pixel = triple_put_pixel;
     backend.get_pixel = triple_get_pixel;
     backend.hline = triple_hline;
