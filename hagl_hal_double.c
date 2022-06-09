@@ -56,8 +56,6 @@ assumed to be valid.
 #include <stdio.h>
 #include <stdlib.h>
 
-static uint8_t buffer[BITMAP_SIZE(DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_DEPTH)];
-
 static bitmap_t fb = {
     .width = DISPLAY_WIDTH,
     .height = DISPLAY_HEIGHT,
@@ -123,9 +121,16 @@ void
 hagl_hal_init(hagl_backend_t *backend)
 {
     mipi_display_init();
-    bitmap_init(&fb, buffer);
 
-    hagl_hal_debug("Back buffer address is %p\n", (void *) buffer);
+    if (!backend->buffer) {
+        size_t size =
+        backend->buffer = malloc(DISPLAY_WIDTH * DISPLAY_HEIGHT * (DISPLAY_DEPTH / 8));
+        hagl_hal_debug("Allocated back buffer to address %p.", (void *) backend->buffer);
+    } else {
+        hagl_hal_debug("Using provided back buffer at address %p.", (void *) backend->buffer);
+    }
+
+    bitmap_init(&fb, backend->buffer);
 
     backend->width = width;
     backend->height = height;
