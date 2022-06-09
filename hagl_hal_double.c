@@ -65,54 +65,58 @@ static bitmap_t fb = {
 };
 
 static size_t
-double_flush()
+flush()
 {
     /* Flush the whole back buffer. */
     return mipi_display_write(0, 0, fb.width, fb.height, (uint8_t *) fb.buffer);
 }
 
 static void
-double_put_pixel(int16_t x0, int16_t y0, color_t color)
+put_pixel(int16_t x0, int16_t y0, color_t color)
 {
-    color_t *ptr = (color_t *) (fb.buffer + fb.pitch * y0 + (fb.depth / 8) * x0);
-    *ptr = color;
+    bitmap_put_pixel(&fb, x0, y0, color);
 }
 
 static color_t
-double_get_pixel(int16_t x0, int16_t y0)
+get_pixel(int16_t x0, int16_t y0)
 {
-    return *(color_t *) (fb.buffer + fb.pitch * y0 + (fb.depth / 8) * x0);
+    return bitmap_get_pixel(&fb, x0, y0);
 }
 
 static void
-double_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
+blit(uint16_t x0, uint16_t y0, bitmap_t *src)
 {
     bitmap_blit(x0, y0, src, &fb);
 }
 
 static void
-double_scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
+scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
 {
     bitmap_scale_blit(x0, y0, w, h, src, &fb);
 }
 
 static void
-double_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
+hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
-    color_t *ptr = (color_t *) (fb.buffer + fb.pitch * y0 + (fb.depth / 8) * x0);
-    for (uint16_t x = 0; x < width; x++) {
-        *ptr++ = color;
-    }
+    bitmap_hline(&fb, x0, y0, width, color);
 }
 
 static void
-double_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
+vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
-    color_t *ptr = (color_t *) (fb.buffer + fb.pitch * y0 + (fb.depth / 8) * x0);
-    for (uint16_t y = 0; y < height; y++) {
-        *ptr = color;
-        ptr += fb.pitch / (fb.depth / 8);
-    }
+    bitmap_vline(&fb, x0, y0, height, color);
+}
+
+static int16_t
+width()
+{
+    return MIPI_DISPLAY_WIDTH;
+}
+
+static int16_t
+height()
+{
+    return MIPI_DISPLAY_HEIGHT;
 }
 
 hagl_backend_t *
@@ -121,19 +125,19 @@ hagl_hal_init(void)
     mipi_display_init();
     bitmap_init(&fb, buffer);
 
+    hagl_hal_debug("Back buffer address is %p\n", (void *) buffer);
+
     static hagl_backend_t backend;
 
     memset(&backend, 0, sizeof(hagl_backend_t));
 
-    backend.width = DISPLAY_WIDTH;
-    backend.height = DISPLAY_HEIGHT;
-    backend.put_pixel = double_put_pixel;
-    backend.get_pixel = double_get_pixel;
-    backend.hline = double_hline;
-    backend.vline = double_vline;
-    backend.flush = double_flush;
-    backend.close = NULL;
-    backend.color = NULL;
+    backend.width = width;
+    backend.height = height;
+    backend.put_pixel = put_pixel;
+    backend.hline = hline;
+    backend.vline = vline;
+
+    backend.flush = flush;
 
     return &backend;
 }
