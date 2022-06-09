@@ -119,27 +119,21 @@ height()
     return MIPI_DISPLAY_HEIGHT;
 }
 
-hagl_backend_t *
-hagl_hal_init(void)
+void
+hagl_hal_init(hagl_backend_t *backend)
 {
     mipi_display_init();
     bitmap_init(&fb, buffer);
 
     hagl_hal_debug("Back buffer address is %p\n", (void *) buffer);
 
-    static hagl_backend_t backend;
+    backend->width = width;
+    backend->height = height;
+    backend->put_pixel = put_pixel;
+    backend->hline = hline;
+    backend->vline = vline;
 
-    memset(&backend, 0, sizeof(hagl_backend_t));
-
-    backend.width = width;
-    backend.height = height;
-    backend.put_pixel = put_pixel;
-    backend.hline = hline;
-    backend.vline = vline;
-
-    backend.flush = flush;
-
-    return &backend;
+    backend->flush = flush;
 }
 
 #endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
