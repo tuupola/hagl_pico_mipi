@@ -64,7 +64,7 @@ static bitmap_t fb = {
     .depth = DISPLAY_DEPTH,
 };
 
-size_t
+static size_t
 flush()
 {
     /* Flush the whole back buffer. */
