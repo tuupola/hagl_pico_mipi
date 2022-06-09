@@ -66,7 +66,7 @@ static bitmap_t bb = {
 };
 
 static
-size_t triple_flush()
+size_t flush()
 {
     uint8_t *buffer = bb.buffer;
     if (bb.buffer == buffer1) {
@@ -79,39 +79,51 @@ size_t triple_flush()
 }
 
 static void
-triple_put_pixel(int16_t x0, int16_t y0, color_t color)
+put_pixel(int16_t x0, int16_t y0, color_t color)
 {
     bitmap_put_pixel(&bb, x0, y0, color);
 }
 
 static color_t
-triple_get_pixel(int16_t x0, int16_t y0)
+get_pixel(int16_t x0, int16_t y0)
 {
     return bitmap_get_pixel(&bb, x0, y0);
 }
 
 static void
-triple_blit(uint16_t x0, uint16_t y0, bitmap_t *src)
+blit(uint16_t x0, uint16_t y0, bitmap_t *src)
 {
     bitmap_blit(x0, y0, src, &bb);
 }
 
 static void
-triple_scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
+scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
 {
     bitmap_scale_blit(x0, y0, w, h, src, &bb);
 }
 
 static void
-triple_hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
+hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
     bitmap_hline(&bb, x0, y0, width, color);
 }
 
 static void
-triple_vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
+vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
     bitmap_vline(&bb, x0, y0, height, color);
+}
+
+static int16_t
+width()
+{
+    return MIPI_DISPLAY_WIDTH;
+}
+
+static int16_t
+height()
+{
+    return MIPI_DISPLAY_HEIGHT;
 }
 
 hagl_backend_t *
@@ -128,15 +140,13 @@ hagl_hal_init(void)
 
     memset(&backend, 0, sizeof(hagl_backend_t));
 
-    backend.width = MIPI_DISPLAY_WIDTH;
-    backend.height = MIPI_DISPLAY_HEIGHT;
-    backend.put_pixel = triple_put_pixel;
-    backend.get_pixel = triple_get_pixel;
-    backend.hline = triple_hline;
-    backend.vline = triple_vline;
-    backend.flush = triple_flush;
-    backend.close = NULL;
-    backend.color = NULL;
+    backend.width = width;
+    backend.height = height;
+    backend.put_pixel = put_pixel;
+    backend.hline = hline;
+    backend.vline = vline;
+
+    backend.flush = flush;
 
     return &backend;
 }
