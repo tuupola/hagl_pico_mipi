@@ -56,23 +56,24 @@ valid.
 #include <stdio.h>
 #include <stdlib.h>
 
-static uint8_t buffer1[BITMAP_SIZE(DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_DEPTH)];
-static uint8_t buffer2[BITMAP_SIZE(DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_DEPTH)];
-
 static bitmap_t bb = {
     .width = DISPLAY_WIDTH,
     .height = DISPLAY_HEIGHT,
     .depth = DISPLAY_DEPTH,
 };
 
-static
-size_t flush()
+static size_t
+flush(void *_backend)
 {
+    const hagl_backend_t *backend = _backend;
+
     uint8_t *buffer = bb.buffer;
-    if (bb.buffer == buffer1) {
-        bb.buffer = buffer2;
+
+    /* Flip the buffers. */
+    if (bb.buffer == backend->buffer) {
+        bb.buffer = backend->buffer2;
     } else {
-        bb.buffer = buffer1;
+        bb.buffer = backend->buffer;
     }
     /* Flush the current back buffer. */
     return mipi_display_write(0, 0, bb.width, bb.height, (uint8_t *) buffer);
@@ -130,11 +131,23 @@ void
 hagl_hal_init(hagl_backend_t *backend)
 {
     mipi_display_init();
-    bitmap_init(&bb, buffer2);
-    bitmap_init(&bb, buffer1);
 
-    hagl_hal_debug("Back buffer 1 address is %p\n", (void *) buffer1);
-    hagl_hal_debug("Back buffer 2 address is %p\n", (void *) buffer2);
+    if (!backend->buffer) {
+        backend->buffer = calloc(sizeof(uint8_t), DISPLAY_WIDTH * DISPLAY_HEIGHT * (DISPLAY_DEPTH / 8));
+        hagl_hal_debug("Allocated first back buffer to address %p.\n", (void *) backend->buffer);
+    } else {
+        hagl_hal_debug("Using provided first back buffer at address %p.\n", (void *) backend->buffer);
+    }
+
+    if (!backend->buffer2) {
+        backend->buffer2 = calloc(sizeof(uint8_t), DISPLAY_WIDTH * DISPLAY_HEIGHT * (DISPLAY_DEPTH / 8));
+        hagl_hal_debug("Allocated second back buffer to address %p.\n", (void *) backend->buffer2);
+    } else {
+        hagl_hal_debug("Using provided second back buffer at address %p.\n", (void *) backend->buffer2);
+    }
+
+    /* Initially use the first buffer. */
+    bitmap_init(&bb, backend->buffer);
 
     backend->width = width;
     backend->height = height;

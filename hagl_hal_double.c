@@ -63,7 +63,7 @@ static bitmap_t fb = {
 };
 
 static size_t
-flush()
+flush(void *backend)
 {
     /* Flush the whole back buffer. */
     return mipi_display_write(0, 0, fb.width, fb.height, (uint8_t *) fb.buffer);
@@ -123,7 +123,6 @@ hagl_hal_init(hagl_backend_t *backend)
     mipi_display_init();
 
     if (!backend->buffer) {
-        size_t size =
         backend->buffer = malloc(DISPLAY_WIDTH * DISPLAY_HEIGHT * (DISPLAY_DEPTH / 8));
         hagl_hal_debug("Allocated back buffer to address %p.", (void *) backend->buffer);
     } else {
