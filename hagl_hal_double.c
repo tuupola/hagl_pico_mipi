@@ -105,18 +105,6 @@ vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
     bitmap_vline(&fb, x0, y0, height, color);
 }
 
-static int16_t
-width()
-{
-    return MIPI_DISPLAY_WIDTH;
-}
-
-static int16_t
-height()
-{
-    return MIPI_DISPLAY_HEIGHT;
-}
-
 void
 hagl_hal_init(hagl_backend_t *backend)
 {
@@ -131,8 +119,9 @@ hagl_hal_init(hagl_backend_t *backend)
 
     bitmap_init(&fb, backend->buffer);
 
-    backend->width = width;
-    backend->height = height;
+    backend->width = MIPI_DISPLAY_WIDTH;
+    backend->height = MIPI_DISPLAY_HEIGHT;
+    backend->depth = MIPI_DISPLAY_DEPTH;
     backend->put_pixel = put_pixel;
     backend->hline = hline;
     backend->vline = vline;
