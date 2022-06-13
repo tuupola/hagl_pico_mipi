@@ -90,34 +90,17 @@ vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
     mipi_display_write(x0, y0, width, height, (uint8_t *) line);
 }
 
-static int16_t
-width()
-{
-    return MIPI_DISPLAY_WIDTH;
-}
-
-static int16_t
-height()
-{
-    return MIPI_DISPLAY_HEIGHT;
-}
-
-hagl_backend_t *
-hagl_hal_init(void)
+void
+hagl_hal_init(hagl_backend_t *backend)
 {
     mipi_display_init();
 
-    static hagl_backend_t backend;
-
-    memset(&backend, 0, sizeof(hagl_backend_t));
-
-    backend.width = width;
-    backend.height = height;
-    backend.put_pixel = put_pixel;
-    backend.hline = hline;
-    backend.vline = vline;
-
-    return &backend;
+    backend->width = MIPI_DISPLAY_WIDTH;
+    backend->height = MIPI_DISPLAY_HEIGHT;
+    backend->depth = MIPI_DISPLAY_DEPTH;
+    backend->put_pixel = put_pixel;
+    backend->hline = hline;
+    backend->vline = vline;
 }
 
 #endif /* HAGL_HAL_USE_SINGLE_BUFFER */

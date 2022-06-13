@@ -59,12 +59,8 @@ extern "C" {
 
 /**
  * Initialize the HAL
- *
- * This HAL returns null since it does not use buffering.
- *
- * @return NULL
  */
-hagl_backend_t *hagl_hal_init(void);
+void hagl_hal_init(hagl_backend_t *backend);
 
 #ifdef __cplusplus
 }

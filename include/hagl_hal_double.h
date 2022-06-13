@@ -64,10 +64,8 @@ extern "C" {
 
 /**
  * Initialize the HAL
- *
- * @return pointer to the backend
  */
-hagl_backend_t *hagl_hal_init(void);
+void hagl_hal_init(hagl_backend_t *backend);
 
 #ifdef __cplusplus
 }

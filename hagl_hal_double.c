@@ -56,8 +56,6 @@ assumed to be valid.
 #include <stdio.h>
 #include <stdlib.h>
 
-static uint8_t buffer[BITMAP_SIZE(DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_DEPTH)];
-
 static bitmap_t fb = {
     .width = DISPLAY_WIDTH,
     .height = DISPLAY_HEIGHT,
@@ -65,7 +63,7 @@ static bitmap_t fb = {
 };
 
 static size_t
-flush()
+flush(void *backend)
 {
     /* Flush the whole back buffer. */
     return mipi_display_write(0, 0, fb.width, fb.height, (uint8_t *) fb.buffer);
@@ -107,39 +105,28 @@ vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
     bitmap_vline(&fb, x0, y0, height, color);
 }
 
-static int16_t
-width()
-{
-    return MIPI_DISPLAY_WIDTH;
-}
-
-static int16_t
-height()
-{
-    return MIPI_DISPLAY_HEIGHT;
-}
-
-hagl_backend_t *
-hagl_hal_init(void)
+void
+hagl_hal_init(hagl_backend_t *backend)
 {
     mipi_display_init();
-    bitmap_init(&fb, buffer);
 
-    hagl_hal_debug("Back buffer address is %p\n", (void *) buffer);
+    if (!backend->buffer) {
+        backend->buffer = calloc(DISPLAY_WIDTH * DISPLAY_HEIGHT * (DISPLAY_DEPTH / 8), sizeof(uint8_t));
+        hagl_hal_debug("Allocated back buffer to address %p.\n", (void *) backend->buffer);
+    } else {
+        hagl_hal_debug("Using provided back buffer at address %p.\n", (void *) backend->buffer);
+    }
 
-    static hagl_backend_t backend;
+    bitmap_init(&fb, backend->buffer);
 
-    memset(&backend, 0, sizeof(hagl_backend_t));
+    backend->width = MIPI_DISPLAY_WIDTH;
+    backend->height = MIPI_DISPLAY_HEIGHT;
+    backend->depth = MIPI_DISPLAY_DEPTH;
+    backend->put_pixel = put_pixel;
+    backend->hline = hline;
+    backend->vline = vline;
 
-    backend.width = width;
-    backend.height = height;
-    backend.put_pixel = put_pixel;
-    backend.hline = hline;
-    backend.vline = vline;
-
-    backend.flush = flush;
-
-    return &backend;
+    backend->flush = flush;
 }
 
 #endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
