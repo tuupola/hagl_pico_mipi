@@ -121,14 +121,14 @@ hagl_hal_init(hagl_backend_t *backend)
     mipi_display_init();
 
     if (!backend->buffer) {
-        backend->buffer = calloc(sizeof(uint8_t), DISPLAY_WIDTH * DISPLAY_HEIGHT * (DISPLAY_DEPTH / 8));
+        backend->buffer = calloc(DISPLAY_WIDTH * DISPLAY_HEIGHT * (DISPLAY_DEPTH / 8), sizeof(uint8_t));
         hagl_hal_debug("Allocated first back buffer to address %p.\n", (void *) backend->buffer);
     } else {
         hagl_hal_debug("Using provided first back buffer at address %p.\n", (void *) backend->buffer);
     }
 
     if (!backend->buffer2) {
-        backend->buffer2 = calloc(sizeof(uint8_t), DISPLAY_WIDTH * DISPLAY_HEIGHT * (DISPLAY_DEPTH / 8));
+        backend->buffer2 = calloc(DISPLAY_WIDTH * DISPLAY_HEIGHT * (DISPLAY_DEPTH / 8), sizeof(uint8_t));
         hagl_hal_debug("Allocated second back buffer to address %p.\n", (void *) backend->buffer2);
     } else {
         hagl_hal_debug("Using provided second back buffer at address %p.\n", (void *) backend->buffer2);
