@@ -56,11 +56,7 @@ valid.
 #include <stdio.h>
 #include <stdlib.h>
 
-static bitmap_t bb = {
-    .width = DISPLAY_WIDTH,
-    .height = DISPLAY_HEIGHT,
-    .depth = DISPLAY_DEPTH,
-};
+static bitmap_t bb;
 
 static size_t
 flush(void *_backend)
@@ -133,6 +129,11 @@ hagl_hal_init(hagl_backend_t *backend)
     } else {
         hagl_hal_debug("Using provided second back buffer at address %p.\n", (void *) backend->buffer2);
     }
+
+    memset(&bb, 0, sizeof(bitmap_t));
+    bb.width = DISPLAY_WIDTH;
+    bb.height = DISPLAY_HEIGHT;
+    bb.depth = DISPLAY_DEPTH;
 
     /* Initially use the first buffer. */
     bitmap_init(&bb, backend->buffer);
