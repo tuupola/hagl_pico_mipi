@@ -56,7 +56,7 @@ assumed to be valid.
 #include <stdio.h>
 #include <stdlib.h>
 
-static bitmap_t fb = {
+static bitmap_t bb = {
     .width = DISPLAY_WIDTH,
     .height = DISPLAY_HEIGHT,
     .depth = DISPLAY_DEPTH,
@@ -66,43 +66,43 @@ static size_t
 flush(void *backend)
 {
     /* Flush the whole back buffer. */
-    return mipi_display_write(0, 0, fb.width, fb.height, (uint8_t *) fb.buffer);
+    return mipi_display_write(0, 0, bb.width, bb.height, (uint8_t *) bb.buffer);
 }
 
 static void
 put_pixel(int16_t x0, int16_t y0, color_t color)
 {
-    bitmap_put_pixel(&fb, x0, y0, color);
+    bitmap_put_pixel(&bb, x0, y0, color);
 }
 
 static color_t
 get_pixel(int16_t x0, int16_t y0)
 {
-    return bitmap_get_pixel(&fb, x0, y0);
+    return bitmap_get_pixel(&bb, x0, y0);
 }
 
 static void
 blit(uint16_t x0, uint16_t y0, bitmap_t *src)
 {
-    bitmap_blit(x0, y0, src, &fb);
+    bitmap_blit(x0, y0, src, &bb);
 }
 
 static void
 scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
 {
-    bitmap_scale_blit(x0, y0, w, h, src, &fb);
+    bitmap_scale_blit(x0, y0, w, h, src, &bb);
 }
 
 static void
 hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
-    bitmap_hline(&fb, x0, y0, width, color);
+    bitmap_hline(&bb, x0, y0, width, color);
 }
 
 static void
 vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
-    bitmap_vline(&fb, x0, y0, height, color);
+    bitmap_vline(&bb, x0, y0, height, color);
 }
 
 void
@@ -117,7 +117,7 @@ hagl_hal_init(hagl_backend_t *backend)
         hagl_hal_debug("Using provided back buffer at address %p.\n", (void *) backend->buffer);
     }
 
-    bitmap_init(&fb, backend->buffer);
+    bitmap_init(&bb, backend->buffer);
 
     backend->width = MIPI_DISPLAY_WIDTH;
     backend->height = MIPI_DISPLAY_HEIGHT;
