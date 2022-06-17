@@ -59,46 +59,47 @@ assumed to be valid.
 static bitmap_t bb;
 
 static size_t
-flush(void *backend)
+flush(void *self)
 {
     /* Flush the whole back buffer. */
     return mipi_display_write(0, 0, bb.width, bb.height, (uint8_t *) bb.buffer);
 }
 
 static void
-put_pixel(int16_t x0, int16_t y0, color_t color)
+put_pixel(void *self, int16_t x0, int16_t y0, color_t color)
 {
-    bitmap_put_pixel(&bb, x0, y0, color);
+    bb.put_pixel(&bb, x0, y0, color);
 }
 
 static color_t
-get_pixel(int16_t x0, int16_t y0)
+get_pixel(void *self, int16_t x0, int16_t y0)
 {
-    return bitmap_get_pixel(&bb, x0, y0);
+    return bb.get_pixel(&bb, x0, y0);
+
 }
 
 static void
-blit(uint16_t x0, uint16_t y0, bitmap_t *src)
+blit(void *self, int16_t x0, int16_t y0, bitmap_t *src)
 {
-    bitmap_blit(x0, y0, src, &bb);
+    bb.blit(&bb, x0, y0, src);
 }
 
 static void
-scale_blit(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
+scale_blit(void *self, uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
 {
-    bitmap_scale_blit(x0, y0, w, h, src, &bb);
+    bb.scale_blit(&bb, x0, y0, w, h, src);
 }
 
 static void
-hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
+hline(void *self, int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
-    bitmap_hline(&bb, x0, y0, width, color);
+    bb.hline(&bb, x0, y0, width, color);
 }
 
 static void
-vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
+vline(void *self, int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
-    bitmap_vline(&bb, x0, y0, height, color);
+    bb.vline(&bb, x0, y0, height, color);
 }
 
 void
@@ -124,8 +125,11 @@ hagl_hal_init(hagl_backend_t *backend)
     backend->height = MIPI_DISPLAY_HEIGHT;
     backend->depth = MIPI_DISPLAY_DEPTH;
     backend->put_pixel = put_pixel;
+    backend->get_pixel = get_pixel;
     backend->hline = hline;
     backend->vline = vline;
+    backend->blit = blit;
+    backend->scale_blit = scale_blit;
 
     backend->flush = flush;
 }
