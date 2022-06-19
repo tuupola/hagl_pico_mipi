@@ -52,19 +52,19 @@ valid.
 #include "mipi_display.h"
 
 static void
-put_pixel(int16_t x0, int16_t y0, color_t color)
+put_pixel(void *self, int16_t x0, int16_t y0, color_t color)
 {
     mipi_display_write(x0, y0, 1, 1, (uint8_t *) &color);
 }
 
 static void
-blit(uint16_t x0, uint16_t y0, bitmap_t *src)
+blit(void *self, int16_t x0, int16_t y0, bitmap_t *src)
 {
     mipi_display_write(x0, y0, src->width, src->height, (uint8_t *) src->buffer);
 }
 
 static void
-hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
+hline(void *self, int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
     static color_t line[DISPLAY_WIDTH];
     const uint16_t height = 1;
@@ -78,7 +78,7 @@ hline(int16_t x0, int16_t y0, uint16_t width, color_t color)
 }
 
 static void
-vline(int16_t x0, int16_t y0, uint16_t height, color_t color)
+vline(void *self, int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
     static color_t line[DISPLAY_HEIGHT];
     const uint16_t width = 1;
