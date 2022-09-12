@@ -54,7 +54,7 @@ static void mipi_display_write_command(const uint8_t command)
     /* Set CS low to reserve the SPI bus. */
     gpio_put(MIPI_DISPLAY_PIN_CS, 0);
 
-    spi_write_blocking(spi0, &command, 1);
+    spi_write_blocking(MIPI_DISPLAY_SPI_PORT, &command, 1);
 
     /* Set CS high to ignore any traffic on SPI bus. */
     gpio_put(MIPI_DISPLAY_PIN_CS, 1);
@@ -74,7 +74,7 @@ static void mipi_display_write_data(const uint8_t *data, size_t length)
     /* Set CS low to reserve the SPI bus. */
     gpio_put(MIPI_DISPLAY_PIN_CS, 0);
 
-    spi_write_blocking(spi0, data, length);
+    spi_write_blocking(MIPI_DISPLAY_SPI_PORT, data, length);
 
     /* Set CS high to ignore any traffic on SPI bus. */
     gpio_put(MIPI_DISPLAY_PIN_CS, 1);
@@ -175,8 +175,9 @@ static void mipi_display_spi_master_init()
     /* Set CS high to ignore any traffic on SPI bus. */
     gpio_put(MIPI_DISPLAY_PIN_CS, 1);
 
-    spi_init(spi0, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
-    uint32_t baud = spi_set_baudrate(spi0, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
+    spi_init(MIPI_DISPLAY_SPI_PORT, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
+
+    uint32_t baud = spi_set_baudrate(MIPI_DISPLAY_SPI_PORT, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
     uint32_t peri = clock_get_hz(clk_peri);
     uint32_t sys = clock_get_hz(clk_sys);
     hagl_hal_debug("Baudrate is set to %d.\n", baud);
@@ -314,5 +315,5 @@ void mipi_display_ioctl(const uint8_t command, uint8_t *data, size_t size)
 
 void mipi_display_close()
 {
-    spi_deinit(spi0);
+    spi_deinit(MIPI_DISPLAY_SPI_PORT);
 }
