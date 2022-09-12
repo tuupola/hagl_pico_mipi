@@ -104,9 +104,13 @@ static void mipi_display_dma_init()
     dma_channel = dma_claim_unused_channel(true);
     dma_channel_config channel_config = dma_channel_get_default_config(dma_channel);
     channel_config_set_transfer_data_size(&channel_config, DMA_SIZE_8);
-    channel_config_set_dreq(&channel_config, DREQ_SPI0_TX);
+    if (spi0 == MIPI_DISPLAY_SPI_PORT) {
+        channel_config_set_dreq(&channel_config, DREQ_SPI0_TX);
+    } else {
+        channel_config_set_dreq(&channel_config, DREQ_SPI1_TX);
+    }
     dma_channel_set_config(dma_channel, &channel_config, false);
-    dma_channel_set_write_addr(dma_channel, &spi_get_hw(spi0)->dr, false);
+    dma_channel_set_write_addr(dma_channel, &spi_get_hw(MIPI_DISPLAY_SPI_PORT)->dr, false);
 }
 
 static void mipi_display_read_data(uint8_t *data, size_t length)
