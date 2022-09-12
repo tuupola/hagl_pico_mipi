@@ -60,6 +60,9 @@ typedef uint16_t color_t;
 #ifndef MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ
 #define MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ     (64 * 1000 * 1000)
 #endif
+#ifndef MIPI_DISPLAY_SPI_PORT
+#define MIPI_DISPLAY_SPI_PORT       (spi0)
+#endif
 #ifndef MIPI_DISPLAY_PIN_CS
 #define MIPI_DISPLAY_PIN_CS         (17)
 #endif
