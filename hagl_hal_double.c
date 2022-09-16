@@ -49,14 +49,14 @@ assumed to be valid.
 #include <mipi_display.h>
 #include <mipi_dcs.h>
 
-#include <bitmap.h>
-#include <backend.h>
+#include <hagl/backend.h>
+#include <hagl/bitmap.h>
 #include <hagl.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 
-static bitmap_t bb;
+static hagl_bitmap_t bb;
 
 static size_t
 flush(void *self)
@@ -79,13 +79,13 @@ get_pixel(void *self, int16_t x0, int16_t y0)
 }
 
 static void
-blit(void *self, int16_t x0, int16_t y0, bitmap_t *src)
+blit(void *self, int16_t x0, int16_t y0, hagl_bitmap_t *src)
 {
     bb.blit(&bb, x0, y0, src);
 }
 
 static void
-scale_blit(void *self, uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, bitmap_t *src)
+scale_blit(void *self, uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, hagl_bitmap_t *src)
 {
     bb.scale_blit(&bb, x0, y0, w, h, src);
 }
@@ -114,7 +114,7 @@ hagl_hal_init(hagl_backend_t *backend)
         hagl_hal_debug("Using provided back buffer at address %p.\n", (void *) backend->buffer);
     }
 
-    memset(&bb, 0, sizeof(bitmap_t));
+    memset(&bb, 0, sizeof(hagl_bitmap_t));
     bb.width = DISPLAY_WIDTH;
     bb.height = DISPLAY_HEIGHT;
     bb.depth = DISPLAY_DEPTH;

@@ -44,8 +44,8 @@ valid.
 
 #ifdef HAGL_HAL_USE_SINGLE_BUFFER
 
-#include <bitmap.h>
-#include <backend.h>
+#include <hagl/bitmap.h>
+#include <hagl/backend.h>
 #include <hagl.h>
 #include <string.h>
 
@@ -58,7 +58,7 @@ put_pixel(void *self, int16_t x0, int16_t y0, color_t color)
 }
 
 static void
-blit(void *self, int16_t x0, int16_t y0, bitmap_t *src)
+blit(void *self, int16_t x0, int16_t y0, hagl_bitmap_t *src)
 {
     mipi_display_write(x0, y0, src->width, src->height, (uint8_t *) src->buffer);
 }
