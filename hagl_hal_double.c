@@ -61,8 +61,27 @@ static hagl_bitmap_t bb;
 static size_t
 flush(void *self)
 {
+#if HAGL_HAL_PIXEL_SIZE==1
     /* Flush the whole back buffer. */
     return mipi_display_write(0, 0, bb.width, bb.height, (uint8_t *) bb.buffer);
+#endif /* HAGL_HAL_PIXEL_SIZE==1 */
+
+#if HAGL_HAL_PIXEL_SIZE==2
+    static color_t line[MIPI_DISPLAY_WIDTH];
+
+    color_t *ptr = (color_t *) bb.buffer;
+    size_t sent = 0;
+
+    for (uint16_t y = 0; y < DISPLAY_HEIGHT; y++) {
+        for (uint16_t x = 0; x < DISPLAY_WIDTH; x++) {
+            line[x * 2] = *(ptr);
+            line[x * 2 + 1] = *(ptr++);
+        }
+        sent += mipi_display_write(0, y * 2, MIPI_DISPLAY_WIDTH, 1, (uint8_t *) line);
+        sent += mipi_display_write(0, y * 2 + 1, MIPI_DISPLAY_WIDTH, 1, (uint8_t *) line);
+    }
+    return sent;
+#endif /* HAGL_HAL_PIXEL_SIZE==2 */
 }
 
 static void

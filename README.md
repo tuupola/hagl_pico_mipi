@@ -51,6 +51,17 @@ target_compile_definitions(firmware PRIVATE
 )
 ```
 
+If you run out of memory you could try using bigger pixel size. For example if you have 240x240 pixel display and you want to try triple buffering you could do the following. In practice it will change your usable resolution to 120x120 pixels.
+
+Note! At the time of writing `HAGL_HAL_PIXEL_SIZE=2` will not work together with the `HAGL_HAL_USE_DMA` setting.
+
+```
+target_compile_definitions(firmware PRIVATE
+  HAGL_HAL_USE_TRIPLE_BUFFER
+  HAGL_HAL_PIXEL_SIZE=2
+)
+```
+
 The default config can be found in `hagl_hal.h`. Defaults are ok for [Pimoroni Pico Display Pack](https://shop.pimoroni.com/products/pico-display-pack) in vertical mode.
 
 ## Configuration
@@ -59,21 +70,24 @@ You can override any of the default settings setting in `CMakeLists.txt`. You on
 
 ```
 target_compile_definitions(firmware PRIVATE
-  MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ=64000000
-  MIPI_DISPLAY_PIN_CS=17
-  MIPI_DISPLAY_PIN_DC=16
-  MIPI_DISPLAY_PIN_RST=-1
-  MIPI_DISPLAY_PIN_BL=20
-  MIPI_DISPLAY_PIN_CLK=18
-  MIPI_DISPLAY_PIN_MOSI=19
-  MIPI_DISPLAY_PIN_MISO=-1
-  MIPI_DISPLAY_PIXEL_FORMAT=MIPI_DCS_PIXEL_FORMAT_16BIT
-  MIPI_DISPLAY_ADDRESS_MODE=MIPI_DCS_ADDRESS_MODE_RGB
-  MIPI_DISPLAY_WIDTH=135
-  MIPI_DISPLAY_HEIGHT=240
-  MIPI_DISPLAY_OFFSET_X=52
-  MIPI_DISPLAY_OFFSET_Y=40
-  MIPI_DISPLAY_INVERT=0
+    MIPI_DISPLAY_PIN_DC=16
+    MIPI_DISPLAY_PIN_CS=17
+    MIPI_DISPLAY_PIN_CLK=18
+    MIPI_DISPLAY_PIN_MOSI=19
+    MIPI_DISPLAY_PIN_RST=-1
+    MIPI_DISPLAY_PIN_BL=20
+    MIPI_DISPLAY_PIN_MISO=-1
+
+    MIPI_DISPLAY_SPI_PORT=spi0
+    MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ=62500000
+
+    MIPI_DISPLAY_PIXEL_FORMAT=MIPI_DCS_PIXEL_FORMAT_16BIT
+    MIPI_DISPLAY_ADDRESS_MODE=MIPI_DCS_ADDRESS_MODE_RGB
+    MIPI_DISPLAY_WIDTH=135
+    MIPI_DISPLAY_HEIGHT=240
+    MIPI_DISPLAY_OFFSET_X=52
+    MIPI_DISPLAY_OFFSET_Y=40
+    MIPI_DISPLAY_INVERT=1
 )
 ```
 

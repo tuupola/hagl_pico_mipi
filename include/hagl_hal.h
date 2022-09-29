@@ -107,8 +107,12 @@ extern "C" {
 #define MIPI_DISPLAY_OFFSET_Y       (40)
 #endif
 
-#define DISPLAY_WIDTH               (MIPI_DISPLAY_WIDTH)
-#define DISPLAY_HEIGHT              (MIPI_DISPLAY_HEIGHT)
+#ifndef HAGL_HAL_PIXEL_SIZE
+#define HAGL_HAL_PIXEL_SIZE         (1)
+#endif
+
+#define DISPLAY_WIDTH               (MIPI_DISPLAY_WIDTH / HAGL_HAL_PIXEL_SIZE)
+#define DISPLAY_HEIGHT              (MIPI_DISPLAY_HEIGHT / HAGL_HAL_PIXEL_SIZE)
 #define DISPLAY_DEPTH               (MIPI_DISPLAY_DEPTH)
 
 #ifdef HAGL_HAL_USE_TRIPLE_BUFFER
