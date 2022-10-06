@@ -56,23 +56,37 @@ assumed to be valid.
 #include <stdio.h>
 #include <stdlib.h>
 
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+
 static hagl_bitmap_t bb;
+static hagl_window_t dirty = {
+    .x0 = DISPLAY_WIDTH - 1,
+    .y0 = DISPLAY_HEIGHT - 1,
+    .x1 = 0,
+    .y1 = 0,
+};
 
 static size_t
 flush(void *self)
 {
+    uint8_t *buffer = bb.buffer;
+    size_t sent = 0;
+
+    /* Forward to first dirty scanline. */
+    buffer += bb.pitch * dirty.y0;
+
+    // hagl_hal_debug("%d,%d %d\n", dirty.y0, dirty.y1, dirty.y1 - dirty.y0 + 1);
+
 #if HAGL_HAL_PIXEL_SIZE==1
-    /* Flush the whole back buffer. */
-    return mipi_display_write(0, 0, bb.width, bb.height, (uint8_t *) bb.buffer);
+    sent =  mipi_display_write(0, dirty.y0, bb.width, dirty.y1 - dirty.y0 + 1, (uint8_t *) buffer);
 #endif /* HAGL_HAL_PIXEL_SIZE==1 */
 
 #if HAGL_HAL_PIXEL_SIZE==2
     static color_t line[MIPI_DISPLAY_WIDTH];
+    color_t *ptr = (color_t *) buffer;
 
-    color_t *ptr = (color_t *) bb.buffer;
-    size_t sent = 0;
-
-    for (uint16_t y = 0; y < DISPLAY_HEIGHT; y++) {
+    for (uint16_t y = dirty.y0; y <= dirty.y1; y++) {
         for (uint16_t x = 0; x < DISPLAY_WIDTH; x++) {
             line[x * 2] = *(ptr);
             line[x * 2 + 1] = *(ptr++);
@@ -80,13 +94,24 @@ flush(void *self)
         sent += mipi_display_write(0, y * 2, MIPI_DISPLAY_WIDTH, 1, (uint8_t *) line);
         sent += mipi_display_write(0, y * 2 + 1, MIPI_DISPLAY_WIDTH, 1, (uint8_t *) line);
     }
-    return sent;
 #endif /* HAGL_HAL_PIXEL_SIZE==2 */
+
+    // dirty.x0 = DISPLAY_WIDTH - 1;
+    dirty.y0 = DISPLAY_HEIGHT - 1;
+    // dirty.x1 = 0;
+    dirty.y1 = 0;
+
+    return sent;
 }
 
 static void
 put_pixel(void *self, int16_t x0, int16_t y0, color_t color)
 {
+    // dirty.x0 = min(dirty.x0, x0);
+    dirty.y0 = min(dirty.y0, y0);
+    // dirty.x1 = max(dirty.x1, x0);
+    dirty.y1 = max(dirty.y1, y0);
+
     bb.put_pixel(&bb, x0, y0, color);
 }
 
@@ -94,31 +119,49 @@ static color_t
 get_pixel(void *self, int16_t x0, int16_t y0)
 {
     return bb.get_pixel(&bb, x0, y0);
-
 }
 
 static void
 blit(void *self, int16_t x0, int16_t y0, hagl_bitmap_t *src)
 {
+    // dirty.x0 = min(dirty.x0, x0);
+    dirty.y0 = min(dirty.y0, y0);
+    // dirty.x1 = max(dirty.x1, x0 + src->width - 1);
+    dirty.y1 = max(dirty.y1, (y0 + src->height - 1));
+
     bb.blit(&bb, x0, y0, src);
 }
 
 static void
 scale_blit(void *self, uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, hagl_bitmap_t *src)
 {
+    // dirty.x0 = min(dirty.x0, x0);
+    dirty.y0 = min(dirty.y0, y0);
+    // dirty.x1 = max(dirty.x1, x0 + w - 1);
+    dirty.y1 = max(dirty.y1, (y0 + h - 1));
     bb.scale_blit(&bb, x0, y0, w, h, src);
 }
 
 static void
-hline(void *self, int16_t x0, int16_t y0, uint16_t width, color_t color)
+hline(void *self, int16_t x0, int16_t y0, uint16_t w, color_t color)
 {
-    bb.hline(&bb, x0, y0, width, color);
+    // dirty.x0 = min(dirty.x0, x0);
+    dirty.y0 = min(dirty.y0, y0);
+    // dirty.x1 = max(dirty.x1, x0 + w - 1);
+    dirty.y1 = max(dirty.y1, y0);
+
+    bb.hline(&bb, x0, y0, w, color);
 }
 
 static void
-vline(void *self, int16_t x0, int16_t y0, uint16_t height, color_t color)
+vline(void *self, int16_t x0, int16_t y0, uint16_t h, color_t color)
 {
-    bb.vline(&bb, x0, y0, height, color);
+    // dirty.x0 = min(dirty.x0, x0);
+    dirty.y0 = min(dirty.y0, y0);
+    // dirty.x1 = max(dirty.x1, x0);
+    dirty.y1 = max(dirty.y1, y0 + h - 1);
+
+    bb.vline(&bb, x0, y0, h, color);
 }
 
 void
