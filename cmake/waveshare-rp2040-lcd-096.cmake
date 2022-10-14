@@ -1,6 +1,7 @@
 #
 # Waveshare RP2040-LCD-0.96 (80x160 ST7735S)
 # https://www.waveshare.com/wiki/RP2040-LCD-0.96
+# https://botland.store/search?s=5904422381578
 #
 target_compile_definitions(firmware PRIVATE
     MIPI_DISPLAY_PIN_CS=9

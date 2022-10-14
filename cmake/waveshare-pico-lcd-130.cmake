@@ -1,6 +1,7 @@
 #
 # Waveshare Pico-LCD-1.3 (240x240 ST7789VW)
 # https://www.waveshare.com/wiki/Pico-LCD-1.3
+# https://botland.store/search?s=5904422371883
 #
 target_compile_definitions(firmware PRIVATE
     MIPI_DISPLAY_PIN_CS=9

@@ -1,6 +1,7 @@
 #
 # Waveshare Pico-LCD-1.44 (128x128 ST7735S)
 # https://www.waveshare.com/wiki/Pico-LCD-1.44
+# https://botland.store/search?s=5904422347284
 #
 target_compile_definitions(firmware PRIVATE
     MIPI_DISPLAY_PIN_CS=9
