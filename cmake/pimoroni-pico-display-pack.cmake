@@ -1,6 +1,7 @@
 #
 # Pimoroni Pico Display Pack (135x240 ST7789)
 # https://shop.pimoroni.com/products/pico-display-pack
+# https://botland.store/search?s=769894017081
 #
 target_compile_definitions(firmware PRIVATE
     MIPI_DISPLAY_PIN_CS=17
