@@ -66,7 +66,7 @@ blit(void *self, int16_t x0, int16_t y0, hagl_bitmap_t *src)
 static void
 hline(void *self, int16_t x0, int16_t y0, uint16_t width, color_t color)
 {
-    static color_t line[DISPLAY_WIDTH];
+    static color_t line[HAGL_HAL_DISPLAY_WIDTH];
     const uint16_t height = 1;
 
     for (uint16_t x = 0; x < width; x++) {
@@ -80,7 +80,7 @@ hline(void *self, int16_t x0, int16_t y0, uint16_t width, color_t color)
 static void
 vline(void *self, int16_t x0, int16_t y0, uint16_t height, color_t color)
 {
-    static color_t line[DISPLAY_HEIGHT];
+    static color_t line[HAGL_HAL_DISPLAY_HEIGHT];
     const uint16_t width = 1;
 
     for (uint16_t y = 0; y < height; y++) {
@@ -95,9 +95,9 @@ hagl_hal_init(hagl_backend_t *backend)
 {
     mipi_display_init();
 
-    backend->width = MIPI_DISPLAY_WIDTH;
-    backend->height = MIPI_DISPLAY_HEIGHT;
-    backend->depth = MIPI_DISPLAY_DEPTH;
+    backend->width = HAGL_HAL_DISPLAY_WIDTH;
+    backend->height = HAGL_HAL_DISPLAY_HEIGHT;
+    backend->depth = HAGL_HAL_DISPLAY_DEPTH;
     backend->put_pixel = put_pixel;
     backend->hline = hline;
     backend->vline = vline;
