@@ -95,9 +95,9 @@ hagl_hal_init(hagl_backend_t *backend)
 {
     mipi_display_init();
 
-    backend->width = HAGL_HAL_DISPLAY_WIDTH;
-    backend->height = HAGL_HAL_DISPLAY_HEIGHT;
-    backend->depth = HAGL_HAL_DISPLAY_DEPTH;
+    backend->width = MIPI_DISPLAY_WIDTH;
+    backend->height = MIPI_DISPLAY_HEIGHT;
+    backend->depth = MIPI_DISPLAY_DEPTH;
     backend->put_pixel = put_pixel;
     backend->hline = hline;
     backend->vline = vline;
