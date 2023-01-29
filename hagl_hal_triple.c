@@ -84,8 +84,8 @@ flush(void *self)
     color_t *ptr = (color_t *) buffer;
     size_t sent = 0;
 
-    for (uint16_t y = 0; y < HAGL_HAL_DISPLAY_HEIGHT; y++) {
-        for (uint16_t x = 0; x < HAGL_HAL_DISPLAY_WIDTH; x++) {
+    for (uint16_t y = 0; y < HAGL_PICO_MIPI_DISPLAY_HEIGHT; y++) {
+        for (uint16_t x = 0; x < HAGL_PICO_MIPI_DISPLAY_WIDTH; x++) {
             line[x * 2] = *(ptr);
             line[x * 2 + 1] = *(ptr++);
         }
@@ -138,30 +138,30 @@ hagl_hal_init(hagl_backend_t *backend)
     mipi_display_init();
 
     if (!backend->buffer) {
-        backend->buffer = calloc(HAGL_HAL_DISPLAY_WIDTH * HAGL_HAL_DISPLAY_HEIGHT * (HAGL_HAL_DISPLAY_DEPTH / 8), sizeof(uint8_t));
+        backend->buffer = calloc(HAGL_PICO_MIPI_DISPLAY_WIDTH * HAGL_PICO_MIPI_DISPLAY_HEIGHT * (HAGL_PICO_MIPI_DISPLAY_DEPTH / 8), sizeof(uint8_t));
         hagl_hal_debug("Allocated first back buffer to address %p.\n", (void *) backend->buffer);
     } else {
         hagl_hal_debug("Using provided first back buffer at address %p.\n", (void *) backend->buffer);
     }
 
     if (!backend->buffer2) {
-        backend->buffer2 = calloc(HAGL_HAL_DISPLAY_WIDTH * HAGL_HAL_DISPLAY_HEIGHT * (HAGL_HAL_DISPLAY_DEPTH / 8), sizeof(uint8_t));
+        backend->buffer2 = calloc(HAGL_PICO_MIPI_DISPLAY_WIDTH * HAGL_PICO_MIPI_DISPLAY_HEIGHT * (HAGL_PICO_MIPI_DISPLAY_DEPTH / 8), sizeof(uint8_t));
         hagl_hal_debug("Allocated second back buffer to address %p.\n", (void *) backend->buffer2);
     } else {
         hagl_hal_debug("Using provided second back buffer at address %p.\n", (void *) backend->buffer2);
     }
 
     memset(&bb, 0, sizeof(hagl_bitmap_t));
-    bb.width = HAGL_HAL_DISPLAY_WIDTH;
-    bb.height = HAGL_HAL_DISPLAY_HEIGHT;
-    bb.depth = HAGL_HAL_DISPLAY_DEPTH;
+    bb.width = HAGL_PICO_MIPI_DISPLAY_WIDTH;
+    bb.height = HAGL_PICO_MIPI_DISPLAY_HEIGHT;
+    bb.depth = HAGL_PICO_MIPI_DISPLAY_DEPTH;
 
     /* Initially use the first buffer. */
     bitmap_init(&bb, backend->buffer);
 
-    backend->width = HAGL_HAL_DISPLAY_WIDTH;
-    backend->height = HAGL_HAL_DISPLAY_HEIGHT;
-    backend->depth = HAGL_HAL_DISPLAY_DEPTH;
+    backend->width = HAGL_PICO_MIPI_DISPLAY_WIDTH;
+    backend->height = HAGL_PICO_MIPI_DISPLAY_HEIGHT;
+    backend->depth = HAGL_PICO_MIPI_DISPLAY_DEPTH;
     backend->put_pixel = put_pixel;
     backend->get_pixel = get_pixel;
     backend->hline = hline;
