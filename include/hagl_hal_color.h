@@ -40,7 +40,7 @@ extern "C" {
 
 #include <stdint.h>
 
-typedef uint16_t color_t;
+typedef uint16_t hagl_color_t;
 
 #ifdef __cplusplus
 }
