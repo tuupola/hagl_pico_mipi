@@ -62,6 +62,15 @@ target_compile_definitions(firmware PRIVATE
 )
 ```
 
+Some boards require power and backlight pins. Out of these the backlight pin is more usual.
+
+```
+target_compile_definitions(firmware PRIVATE
+  MIPI_DISPLAY_PIN_BL=20
+  MIPI_DISPLAY_PIN_POWER=22
+)
+```
+
 The default config can be found in `hagl_hal.h`. Defaults are ok for [Pimoroni Pico Display Pack](https://shop.pimoroni.com/products/pico-display-pack) in vertical mode.
 
 ## Configuration
@@ -77,6 +86,7 @@ target_compile_definitions(firmware PRIVATE
     MIPI_DISPLAY_PIN_RST=-1
     MIPI_DISPLAY_PIN_BL=20
     MIPI_DISPLAY_PIN_MISO=-1
+    MIPI_DISPLAY_PIN_POWER=-1
 
     MIPI_DISPLAY_SPI_PORT=spi0
     MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ=62500000
