@@ -245,8 +245,14 @@ void mipi_display_init()
     if (MIPI_DISPLAY_PIN_BL > 0) {
         gpio_set_function(MIPI_DISPLAY_PIN_BL, GPIO_FUNC_SIO);
         gpio_set_dir(MIPI_DISPLAY_PIN_BL, GPIO_OUT);
-
         gpio_put(MIPI_DISPLAY_PIN_BL, 1);
+    }
+
+    /* Enable power */
+    if (MIPI_DISPLAY_PIN_POWER > 0) {
+        gpio_set_function(MIPI_DISPLAY_PIN_POWER, GPIO_FUNC_SIO);
+        gpio_set_dir(MIPI_DISPLAY_PIN_POWER, GPIO_OUT);
+        gpio_put(MIPI_DISPLAY_PIN_POWER, 1);
     }
 
     /* Set the default viewport to full screen. */
