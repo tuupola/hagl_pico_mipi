@@ -40,6 +40,7 @@ SPDX-License-Identifier: MIT
 #include <hardware/dma.h>
 #include <hardware/gpio.h>
 #include <hardware/clocks.h>
+#include <pico/time.h>
 
 #include "mipi_dcs.h"
 #include "mipi_display.h"
