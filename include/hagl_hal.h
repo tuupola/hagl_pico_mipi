@@ -77,6 +77,9 @@ extern "C" {
 #ifndef MIPI_DISPLAY_PIN_MISO
 #define MIPI_DISPLAY_PIN_MISO       (-1)
 #endif
+#ifndef MIPI_DISPLAY_PIN_POWER
+#define MIPI_DISPLAY_PIN_POWER      (-1)
+#endif
 #ifndef MIPI_DISPLAY_PIXEL_FORMAT
 #define MIPI_DISPLAY_PIXEL_FORMAT   (MIPI_DCS_PIXEL_FORMAT_16BIT)
 #endif
