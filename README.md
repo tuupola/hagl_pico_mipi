@@ -24,6 +24,8 @@ target_link_libraries(firmware hagl hagl_hal)
 
 ```
 
+### Buffering
+
 By default the HAL uses single buffering. The buffer is the GRAM of the display driver chip. You can enable double buffering with the following.
 
 ```
@@ -51,6 +53,8 @@ target_compile_definitions(firmware PRIVATE
 )
 ```
 
+### Pixel size
+
 If you run out of memory you could try using bigger pixel size. For example if you have 240x240 pixel display and you want to try triple buffering you could do the following. In practice it will change your usable resolution to 120x120 pixels.
 
 Note! At the time of writing `HAGL_HAL_PIXEL_SIZE=2` will not work together with the `HAGL_HAL_USE_DMA` setting.
@@ -62,7 +66,9 @@ target_compile_definitions(firmware PRIVATE
 )
 ```
 
-Some boards require power and backlight pins. Out of these the backlight pin is more usual.
+### Power and Backlight
+
+Some boards require power and / or backlight pins. Out of these the backlight pin is more usual.
 
 ```
 target_compile_definitions(firmware PRIVATE
