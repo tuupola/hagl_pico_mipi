@@ -77,32 +77,32 @@ target_compile_definitions(firmware PRIVATE
 )
 ```
 
-The default config can be found in `hagl_hal.h`. Defaults are ok for [Pimoroni Pico Display Pack](https://shop.pimoroni.com/products/pico-display-pack) in vertical mode.
+
 
 ## Configuration
 
-You can override any of the default settings setting in `CMakeLists.txt`. You only need to override a value if default is not ok. Below example shows all the possible overridable values. These are also the default values.
+You can override any of the default settings setting in `CMakeLists.txt`. You only need to override a value if default is not ok. Below example shows all default values. Defaults are ok for [Waveshare RP2040-LCD-0.96](https://www.waveshare.com/wiki/RP2040-LCD-0.96) in vertical mode.
 
 ```
 target_compile_definitions(firmware PRIVATE
-    MIPI_DISPLAY_PIN_DC=16
-    MIPI_DISPLAY_PIN_CS=17
-    MIPI_DISPLAY_PIN_CLK=18
-    MIPI_DISPLAY_PIN_MOSI=19
-    MIPI_DISPLAY_PIN_RST=-1
-    MIPI_DISPLAY_PIN_BL=20
+    MIPI_DISPLAY_PIN_CS=9
+    MIPI_DISPLAY_PIN_DC=8
+    MIPI_DISPLAY_PIN_RST=12
+    MIPI_DISPLAY_PIN_BL=13
+    MIPI_DISPLAY_PIN_CLK=10
+    MIPI_DISPLAY_PIN_MOSI=11
     MIPI_DISPLAY_PIN_MISO=-1
     MIPI_DISPLAY_PIN_POWER=-1
 
-    MIPI_DISPLAY_SPI_PORT=spi0
+    MIPI_DISPLAY_SPI_PORT=spi1
     MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ=62500000
 
     MIPI_DISPLAY_PIXEL_FORMAT=MIPI_DCS_PIXEL_FORMAT_16BIT
-    MIPI_DISPLAY_ADDRESS_MODE=MIPI_DCS_ADDRESS_MODE_RGB
-    MIPI_DISPLAY_WIDTH=135
-    MIPI_DISPLAY_HEIGHT=240
-    MIPI_DISPLAY_OFFSET_X=52
-    MIPI_DISPLAY_OFFSET_Y=40
+    MIPI_DISPLAY_ADDRESS_MODE=MIPI_DCS_ADDRESS_MODE_BGR
+    MIPI_DISPLAY_WIDTH=80
+    MIPI_DISPLAY_HEIGHT=160
+    MIPI_DISPLAY_OFFSET_X=26
+    MIPI_DISPLAY_OFFSET_Y=1
     MIPI_DISPLAY_INVERT=1
 )
 ```
