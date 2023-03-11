@@ -173,7 +173,7 @@ Below testing was done with Waveshare [RP2040-LCD-0.96](https://www.waveshare.co
 
 |                               | Single | Double    | Double DMA | Triple DMA |
 |-------------------------------|--------|-----------|------------|------------|
-| hagl_put_pixel()              | 117261 |    364294 |     364294 |     365326 |
+| hagl_put_pixel()              | 117261 |    319931 |     364294 |     365326 |
 | hagl_draw_line()              |   2550 |     15655 |      17723 |      17794 |
 | hagl_draw_vline()             |  54357 |     72712 |      82412 |      82509 |
 | hagl_draw_hline()             |  68001 |     72637 |      82305 |      82497 |
