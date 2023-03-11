@@ -47,6 +47,11 @@ SPDX-License-Identifier: MIT
 
 static int dma_channel;
 
+static inline uint16_t htons(uint16_t i) {
+    __asm ("rev16 %0, %0" : "+l" (i) : : );
+    return i;
+}
+
 static void mipi_display_write_command(const uint8_t command)
 {
     /* Set DC low to denote incoming command. */
@@ -75,7 +80,14 @@ static void mipi_display_write_data(const uint8_t *data, size_t length)
     /* Set CS low to reserve the SPI bus. */
     gpio_put(MIPI_DISPLAY_PIN_CS, 0);
 
-    spi_write_blocking(MIPI_DISPLAY_SPI_PORT, data, length);
+    for (size_t i = 0; i < length; ++i) {
+        while (!spi_is_writable(MIPI_DISPLAY_SPI_PORT)) {};
+        spi_get_hw(MIPI_DISPLAY_SPI_PORT)->dr = (uint32_t) data[i];
+    }
+
+    /* Wait for shifting to finish. */
+    while (spi_get_hw(MIPI_DISPLAY_SPI_PORT)->sr & SPI_SSPSR_BSY_BITS) {};
+    spi_get_hw(MIPI_DISPLAY_SPI_PORT)->icr = SPI_SSPICR_RORIC_BITS;
 
     /* Set CS high to ignore any traffic on SPI bus. */
     gpio_put(MIPI_DISPLAY_PIN_CS, 1);
@@ -267,11 +279,6 @@ void mipi_display_init()
 #endif /* HAGL_HAS_HAL_BACK_BUFFER */
 }
 
-static inline uint16_t htons(uint16_t i) {
-    __asm ("rev16 %0, %0" : "+l" (i) : : );
-    return i;
-}
-
 size_t mipi_display_fill(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *_color)
 {
     if (0 == w || 0 == h) {
@@ -301,6 +308,7 @@ size_t mipi_display_fill(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void 
 
     /* Wait for shifting to finish. */
     while (spi_get_hw(MIPI_DISPLAY_SPI_PORT)->sr & SPI_SSPSR_BSY_BITS) {};
+    spi_get_hw(MIPI_DISPLAY_SPI_PORT)->icr = SPI_SSPICR_RORIC_BITS;
 
     spi_set_format(MIPI_DISPLAY_SPI_PORT, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
 
