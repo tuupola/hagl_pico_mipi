@@ -169,7 +169,7 @@ target_compile_definitions(firmware PRIVATE
 
 ## Speed
 
-Below testing was done with Waveshare [RP2040-LCD-0.96](https://www.waveshare.com/wiki/RP2040-LCD-0.96). Buffered refresh rate was set to 30 frames per second. Number represents operations per seconsd ie. bigger number is better.
+Below testing was done with Waveshare [RP2040-LCD-0.96](https://www.waveshare.com/wiki/RP2040-LCD-0.96). Buffered refresh rate was set to 30 frames per second. Number represents operations per seconds ie. bigger number is better.
 
 |                               | Single | Double    | Double DMA | Triple DMA |
 |-------------------------------|--------|-----------|------------|------------|
