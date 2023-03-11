@@ -266,6 +266,35 @@ void mipi_display_init()
 #endif /* HAGL_HAS_HAL_BACK_BUFFER */
 }
 
+size_t mipi_display_fill(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *color)
+{
+    if (0 == w || 0 == h) {
+        return 0;
+    }
+
+    int32_t x2 = x1 + w - 1;
+    int32_t y2 = y1 + h - 1;
+    size_t size = w * h;
+    uint8_t *c = color;
+
+    mipi_display_set_address(x1, y1, x2, y2);
+
+    /* Set DC high to denote incoming data. */
+    gpio_put(MIPI_DISPLAY_PIN_DC, 1);
+
+    /* Set CS low to reserve the SPI bus. */
+    gpio_put(MIPI_DISPLAY_PIN_CS, 0);
+
+    while (size--) {
+        spi_write_blocking(MIPI_DISPLAY_SPI_PORT, color, MIPI_DISPLAY_DEPTH / 8);
+    }
+
+    /* Set CS high to ignore any traffic on SPI bus. */
+    gpio_put(MIPI_DISPLAY_PIN_CS, 1);
+
+    return size;
+}
+
 size_t mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_t *buffer)
 {
     if (0 == w || 0 == h) {
