@@ -181,6 +181,7 @@ static void mipi_display_spi_master_init()
     gpio_put(MIPI_DISPLAY_PIN_CS, 1);
 
     spi_init(MIPI_DISPLAY_SPI_PORT, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
+    spi_set_format(MIPI_DISPLAY_SPI_PORT, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
 
     uint32_t baud = spi_set_baudrate(MIPI_DISPLAY_SPI_PORT, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
     uint32_t peri = clock_get_hz(clk_peri);
@@ -266,7 +267,12 @@ void mipi_display_init()
 #endif /* HAGL_HAS_HAL_BACK_BUFFER */
 }
 
-size_t mipi_display_fill(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *color)
+static inline uint16_t htons(uint16_t i) {
+    __asm ("rev16 %0, %0" : "+l" (i) : : );
+    return i;
+}
+
+size_t mipi_display_fill(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *_color)
 {
     if (0 == w || 0 == h) {
         return 0;
@@ -275,7 +281,7 @@ size_t mipi_display_fill(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void 
     int32_t x2 = x1 + w - 1;
     int32_t y2 = y1 + h - 1;
     size_t size = w * h;
-    uint8_t *c = color;
+    uint16_t *color = _color;
 
     mipi_display_set_address(x1, y1, x2, y2);
 
@@ -285,9 +291,18 @@ size_t mipi_display_fill(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void 
     /* Set CS low to reserve the SPI bus. */
     gpio_put(MIPI_DISPLAY_PIN_CS, 0);
 
+    /* TODO: This assumes 16 bit colors. */
+    spi_set_format(MIPI_DISPLAY_SPI_PORT, 16, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
+
     while (size--) {
-        spi_write_blocking(MIPI_DISPLAY_SPI_PORT, color, MIPI_DISPLAY_DEPTH / 8);
+        while (!spi_is_writable(MIPI_DISPLAY_SPI_PORT)) {};
+        spi_get_hw(MIPI_DISPLAY_SPI_PORT)->dr = (uint32_t) htons(*color);
     }
+
+    /* Wait for shifting to finish. */
+    while (spi_get_hw(MIPI_DISPLAY_SPI_PORT)->sr & SPI_SSPSR_BSY_BITS) {};
+
+    spi_set_format(MIPI_DISPLAY_SPI_PORT, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
 
     /* Set CS high to ignore any traffic on SPI bus. */
     gpio_put(MIPI_DISPLAY_PIN_CS, 1);
