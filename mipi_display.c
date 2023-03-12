@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) 2019-2022 Mika Tuupola
+Copyright (c) 2019-2023 Mika Tuupola
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -47,12 +47,15 @@ SPDX-License-Identifier: MIT
 
 static int dma_channel;
 
-static inline uint16_t htons(uint16_t i) {
+static inline uint16_t
+htons(uint16_t i)
+{
     __asm ("rev16 %0, %0" : "+l" (i) : : );
     return i;
 }
 
-static void mipi_display_write_command(const uint8_t command)
+static void
+mipi_display_write_command(const uint8_t command)
 {
     /* Set DC low to denote incoming command. */
     gpio_put(MIPI_DISPLAY_PIN_DC, 0);
@@ -66,7 +69,8 @@ static void mipi_display_write_command(const uint8_t command)
     gpio_put(MIPI_DISPLAY_PIN_CS, 1);
 }
 
-static void mipi_display_write_data(const uint8_t *data, size_t length)
+static void
+mipi_display_write_data(const uint8_t *data, size_t length)
 {
     size_t sent = 0;
 
@@ -93,7 +97,8 @@ static void mipi_display_write_data(const uint8_t *data, size_t length)
     gpio_put(MIPI_DISPLAY_PIN_CS, 1);
 }
 
-static void mipi_display_write_data_dma(const uint8_t *buffer, size_t length)
+static void
+mipi_display_write_data_dma(const uint8_t *buffer, size_t length)
 {
     if (0 == length) {
         return;
@@ -110,7 +115,8 @@ static void mipi_display_write_data_dma(const uint8_t *buffer, size_t length)
     dma_channel_set_read_addr(dma_channel, buffer, true);
 }
 
-static void mipi_display_dma_init()
+static void
+mipi_display_dma_init()
 {
     hagl_hal_debug("%s\n", "initialising DMA.");
 
@@ -126,14 +132,17 @@ static void mipi_display_dma_init()
     dma_channel_set_write_addr(dma_channel, &spi_get_hw(MIPI_DISPLAY_SPI_PORT)->dr, false);
 }
 
-static void mipi_display_read_data(uint8_t *data, size_t length)
+static void
+mipi_display_read_data(uint8_t *data, size_t length)
 {
     if (0 == length) {
         return;
     };
 }
 
-static void mipi_display_set_address(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {
+static void
+mipi_display_set_address(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
+{
     uint8_t command;
     uint8_t data[4];
     static uint16_t prev_x1, prev_x2, prev_y1, prev_y2;
@@ -172,7 +181,8 @@ static void mipi_display_set_address(uint16_t x1, uint16_t y1, uint16_t x2, uint
     mipi_display_write_command(MIPI_DCS_WRITE_MEMORY_START);
 }
 
-static void mipi_display_spi_master_init()
+static void
+mipi_display_spi_master_init()
 {
     hagl_hal_debug("%s\n", "Initialising SPI.");
 
@@ -203,7 +213,8 @@ static void mipi_display_spi_master_init()
     hagl_hal_debug("clk_sys %d.\n", sys);
 }
 
-void mipi_display_init()
+void
+mipi_display_init()
 {
 #ifdef HAGL_HAL_USE_SINGLE_BUFFER
     hagl_hal_debug("%s\n", "Initialising single buffered display.");
@@ -237,10 +248,10 @@ void mipi_display_init()
     sleep_ms(200);
 
     mipi_display_write_command(MIPI_DCS_SET_ADDRESS_MODE);
-    mipi_display_write_data(&(uint8_t){MIPI_DISPLAY_ADDRESS_MODE}, 1);
+    mipi_display_write_data(&(uint8_t) {MIPI_DISPLAY_ADDRESS_MODE}, 1);
 
     mipi_display_write_command(MIPI_DCS_SET_PIXEL_FORMAT);
-    mipi_display_write_data(&(uint8_t){MIPI_DISPLAY_PIXEL_FORMAT}, 1);
+    mipi_display_write_data(&(uint8_t) {MIPI_DISPLAY_PIXEL_FORMAT}, 1);
 
 #ifdef MIPI_DISPLAY_INVERT
     mipi_display_write_command(MIPI_DCS_ENTER_INVERT_MODE);
@@ -279,7 +290,8 @@ void mipi_display_init()
 #endif /* HAGL_HAS_HAL_BACK_BUFFER */
 }
 
-size_t mipi_display_fill(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *_color)
+size_t
+mipi_display_fill(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *_color)
 {
     if (0 == w || 0 == h) {
         return 0;
@@ -318,7 +330,8 @@ size_t mipi_display_fill(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void 
     return size;
 }
 
-size_t mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_t *buffer)
+size_t
+mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_t *buffer)
 {
     if (0 == w || 0 == h) {
         return 0;
@@ -346,7 +359,8 @@ size_t mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint
 }
 
 /* TODO: This most likely does not work with dma atm. */
-void mipi_display_ioctl(const uint8_t command, uint8_t *data, size_t size)
+void
+mipi_display_ioctl(const uint8_t command, uint8_t *data, size_t size)
 {
     switch (command) {
         case MIPI_DCS_GET_COMPRESSION_MODE:
@@ -376,7 +390,8 @@ void mipi_display_ioctl(const uint8_t command, uint8_t *data, size_t size)
     }
 }
 
-void mipi_display_close()
+void
+mipi_display_close()
 {
     spi_deinit(MIPI_DISPLAY_SPI_PORT);
 }
