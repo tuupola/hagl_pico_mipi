@@ -77,7 +77,15 @@ target_compile_definitions(firmware PRIVATE
 )
 ```
 
+### Vertical Sync
 
+While quite rare, some devices such as [Pimoroni PicoSystem](https://shop.pimoroni.com/products/picosystem) (awesome device btw) provide vsync signal on a pin. This can be used to reduce tearing when using double or triple buffering.
+
+```
+target_compile_definitions(firmware PRIVATE
+    MIPI_DISPLAY_PIN_VSYNC=8
+)
+```
 
 ## Configuration
 
@@ -93,6 +101,7 @@ target_compile_definitions(firmware PRIVATE
     MIPI_DISPLAY_PIN_MOSI=11
     MIPI_DISPLAY_PIN_MISO=-1
     MIPI_DISPLAY_PIN_POWER=-1
+    MIPI_DISPLAY_PIN_VSYNC=-1
 
     MIPI_DISPLAY_SPI_PORT=spi1
     MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ=62500000
