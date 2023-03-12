@@ -47,6 +47,8 @@ valid.
 #ifdef HAGL_HAL_USE_TRIPLE_BUFFER
 
 #include <string.h>
+#include <hardware/gpio.h>
+
 #include <mipi_display.h>
 #include <mipi_dcs.h>
 
@@ -72,6 +74,10 @@ flush(void *self)
     } else {
         bb.buffer = backend->buffer;
     }
+
+#if defined MIPI_DISPLAY_PIN_VSYNC && MIPI_DISPLAY_PIN_VSYNC != -1
+    while (!gpio_get(MIPI_DISPLAY_PIN_VSYNC)) {}
+#endif /* MIPI_DISPLAY_PIN_VSYNC != -1 */
 
 #if HAGL_HAL_PIXEL_SIZE==1
     /* Flush the current back buffer. */
