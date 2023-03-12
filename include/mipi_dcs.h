@@ -111,6 +111,9 @@ extern "C" {
 #define MIPI_DCS_ADDRESS_MODE_FLIP_X        0x02
 #define MIPI_DCS_ADDRESS_MODE_FLIP_Y        0x01
 
+#define MIPI_DCS_SET_TEAR_ON_VSYNC          0x00
+#define MIPI_DCS_SET_TEAR_ON_VSYNC_HSYNC    0x01
+
 #ifdef __cplusplus
 }
 #endif

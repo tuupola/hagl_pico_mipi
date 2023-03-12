@@ -46,6 +46,7 @@ assumed to be valid.
 #ifdef HAGL_HAL_USE_DOUBLE_BUFFER
 
 #include <string.h>
+#include <hardware/gpio.h>
 #include <mipi_display.h>
 #include <mipi_dcs.h>
 
@@ -61,6 +62,10 @@ static hagl_bitmap_t bb;
 static size_t
 flush(void *self)
 {
+#if defined MIPI_DISPLAY_PIN_VSYNC && MIPI_DISPLAY_PIN_VSYNC != -1
+    while (!gpio_get(MIPI_DISPLAY_PIN_VSYNC)) {}
+#endif /* MIPI_DISPLAY_PIN_VSYNC != -1 */
+
 #if HAGL_HAL_PIXEL_SIZE==1
     /* Flush the whole back buffer. */
     return mipi_display_write(0, 0, bb.width, bb.height, (uint8_t *) bb.buffer);
