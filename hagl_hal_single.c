@@ -54,7 +54,7 @@ valid.
 static void
 put_pixel(void *self, int16_t x0, int16_t y0, hagl_color_t color)
 {
-    mipi_display_write(x0, y0, 1, 1, (uint8_t *) &color);
+    mipi_display_write_xy(x0, y0, (uint8_t *) &color);
 }
 
 static void
