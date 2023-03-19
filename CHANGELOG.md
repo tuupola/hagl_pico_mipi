@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file, in reverse 
 ## [0.2.1](https://github.com/tuupola/hagl_pico_mipi/compare/0.2.0...0.2.1) - 2021-04-30
 
 ### Fixed
+- Both `fps()` and `aps()` were broken due to missing `_times()` function ([#33](https://github.com/tuupola/hagl_pico_mipi/pull/33)).
 
 ## 0.2.0 - 2021-03-21
 
