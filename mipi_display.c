@@ -141,7 +141,7 @@ mipi_display_read_data(uint8_t *data, size_t length)
 }
 
 static void
-mipi_display_set_address(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
+mipi_display_set_address_xyxy(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 {
     uint8_t command;
     uint8_t data[4];
@@ -303,7 +303,7 @@ mipi_display_init()
     }
 
     /* Set the default viewport to full screen. */
-    mipi_display_set_address(0, 0, MIPI_DISPLAY_WIDTH - 1, MIPI_DISPLAY_HEIGHT - 1);
+    mipi_display_set_address_xyxy(0, 0, MIPI_DISPLAY_WIDTH - 1, MIPI_DISPLAY_HEIGHT - 1);
 
 #ifdef HAGL_HAS_HAL_BACK_BUFFER
 #ifdef HAGL_HAL_USE_DMA
@@ -324,7 +324,7 @@ mipi_display_fill(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *_color
     size_t size = w * h;
     uint16_t *color = _color;
 
-    mipi_display_set_address(x1, y1, x2, y2);
+    mipi_display_set_address_xyxy(x1, y1, x2, y2);
 
     /* Set DC high to denote incoming data. */
     gpio_put(MIPI_DISPLAY_PIN_DC, 1);
@@ -364,12 +364,12 @@ mipi_display_write(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_t *bu
     uint32_t size = w * h;
 
 #ifdef HAGL_HAL_USE_SINGLE_BUFFER
-    mipi_display_set_address(x1, y1, x2, y2);
+    mipi_display_set_address_xyxy(x1, y1, x2, y2);
     mipi_display_write_data(buffer, size * MIPI_DISPLAY_DEPTH / 8);
 #endif /* HAGL_HAL_SINGLE_BUFFER */
 
 #ifdef HAGL_HAS_HAL_BACK_BUFFER
-    mipi_display_set_address(x1, y1, x2, y2);
+    mipi_display_set_address_xyxy(x1, y1, x2, y2);
 #ifdef HAGL_HAL_USE_DMA
     mipi_display_write_data_dma(buffer, size * MIPI_DISPLAY_DEPTH / 8);
 #else
