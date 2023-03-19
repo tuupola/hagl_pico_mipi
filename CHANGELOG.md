@@ -13,7 +13,6 @@ All notable changes to this project will be documented in this file, in reverse 
 - Default config is now for Waveshare RP2040-LCD-0.96 ([#38](https://github.com/tuupola/hagl_pico_mipi/pull/38)).
 - SPI data write functions are now inlined to improve performance ([#43](https://github.com/tuupola/hagl_pico_mipi/pull/43)).
 
-### Removed
 ### Added
 - Config file for Pimoroni PicoSystem ([3aced13](https://github.com/tuupola/hagl_pico_mipi/commit/3aced138b409bd26b135f5d18d08f349a39f54fe)).
 - Config files for generic displays ([#23](https://github.com/tuupola/hagl_pico_mipi/pull/23)).
@@ -29,10 +28,13 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ## [0.3.0](https://github.com/tuupola/hagl_pico_mipi/compare/0.2.1...0.3.0) - 2022-09-17
 
-### Fixed
 ### Changed
-### Removed
+- This HAL is now a backend as required by HAGL 0.6.0 ([#11](https://github.com/tuupola/hagl_pico_mipi/pull/11), [#13](https://github.com/tuupola/hagl_pico_mipi/pull/13), [#15](https://github.com/tuupola/hagl_pico_mipi/pull/15), [#20](https://github.com/tuupola/hagl_pico_mipi/pull/20)).
+
 ### Added
+- Support to manually allocate the back buffers ([#14](https://github.com/tuupola/hagl_pico_mipi/pull/14)).
+- Support for `MIPI_DISPLAY_SPI_PORT` setting ([#16](https://github.com/tuupola/hagl_pico_mipi/pull/16), [#19](https://github.com/tuupola/hagl_pico_mipi/pull/19)).
+- Config files for Pimoroni Pico Display pack, Waveshare Pico-LCD-0.96, Waveshare Pico-LCD-1.44, Waveshare Pico-LCD-1.3 and Waveshare RP2040-LCD-0.96  ([#18](https://github.com/tuupola/hagl_pico_mipi/pull/18)).
 
 ## [0.2.1](https://github.com/tuupola/hagl_pico_mipi/compare/0.2.0...0.2.1) - 2021-04-30
 
