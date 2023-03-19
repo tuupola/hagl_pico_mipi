@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Changed
 ### Removed
 ### Added
-- Config file for Pimoroni PicoSystem (https://github.com/tuupola/hagl_pico_mipi/commit/3aced138b409bd26b135f5d18d08f349a39f54fe)
+- Config file for Pimoroni PicoSystem ([3aced13](https://github.com/tuupola/hagl_pico_mipi/commit/3aced138b409bd26b135f5d18d08f349a39f54fe))
 
 ## [0.3.0](https://github.com/tuupola/hagl_pico_mipi/compare/0.2.1...0.3.0) - 2022-09-17
 
