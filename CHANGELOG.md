@@ -28,6 +28,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ## [0.3.0](https://github.com/tuupola/hagl_pico_mipi/compare/0.2.1...0.3.0) - 2022-09-17
 
+This version adds support for HAGL 0.6.x.
+
 ### Changed
 - This HAL is now a backend as required by HAGL 0.6.0 ([#11](https://github.com/tuupola/hagl_pico_mipi/pull/11), [#13](https://github.com/tuupola/hagl_pico_mipi/pull/13), [#15](https://github.com/tuupola/hagl_pico_mipi/pull/15), [#20](https://github.com/tuupola/hagl_pico_mipi/pull/20)).
 
