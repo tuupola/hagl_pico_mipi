@@ -83,7 +83,7 @@ While quite rare, some devices such as [Pimoroni PicoSystem](https://shop.pimoro
 
 ```
 target_compile_definitions(firmware PRIVATE
-    MIPI_DISPLAY_PIN_VSYNC=8
+    MIPI_DISPLAY_PIN_TE=8
 )
 ```
 
@@ -101,7 +101,7 @@ target_compile_definitions(firmware PRIVATE
     MIPI_DISPLAY_PIN_MOSI=11
     MIPI_DISPLAY_PIN_MISO=-1
     MIPI_DISPLAY_PIN_POWER=-1
-    MIPI_DISPLAY_PIN_VSYNC=-1
+    MIPI_DISPLAY_PIN_TE=-1
 
     MIPI_DISPLAY_SPI_PORT=spi1
     MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ=62500000

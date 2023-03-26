@@ -62,9 +62,9 @@ static hagl_bitmap_t bb;
 static size_t
 flush(void *self)
 {
-#if defined MIPI_DISPLAY_PIN_VSYNC && MIPI_DISPLAY_PIN_VSYNC != -1
-    while (!gpio_get(MIPI_DISPLAY_PIN_VSYNC)) {}
-#endif /* MIPI_DISPLAY_PIN_VSYNC != -1 */
+#if MIPI_DISPLAY_PIN_TE > 0
+    while (!gpio_get(MIPI_DISPLAY_PIN_TE)) {}
+#endif /* MIPI_DISPLAY_PIN_TE > 0 */
 
 #if HAGL_HAL_PIXEL_SIZE==1
     /* Flush the whole back buffer. */

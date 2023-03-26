@@ -253,18 +253,18 @@ mipi_display_init()
     mipi_display_write_command(MIPI_DCS_SET_PIXEL_FORMAT);
     mipi_display_write_data(&(uint8_t) {MIPI_DISPLAY_PIXEL_FORMAT}, 1);
 
-    if (MIPI_DISPLAY_PIN_VSYNC > 0) {
-        mipi_display_write_command(MIPI_DCS_SET_TEAR_ON);
-        mipi_display_write_data(&(uint8_t) {MIPI_DCS_SET_TEAR_ON_VSYNC}, 1);
-        hagl_hal_debug("Enable vsync notification on pin %d\n", MIPI_DISPLAY_PIN_VSYNC);
-    }
+#if MIPI_DISPLAY_PIN_TE > 0
+    mipi_display_write_command(MIPI_DCS_SET_TEAR_ON);
+    mipi_display_write_data(&(uint8_t) {MIPI_DCS_SET_TEAR_ON_VSYNC}, 1);
+    hagl_hal_debug("Enable vsync notification on pin %d\n", MIPI_DISPLAY_PIN_TE);
+#endif /* MIPI_DISPLAY_PIN_TE > 0 */
 
 #ifdef MIPI_DISPLAY_INVERT
     mipi_display_write_command(MIPI_DCS_ENTER_INVERT_MODE);
     hagl_hal_debug("%s\n", "Inverting display.");
 #else
     mipi_display_write_command(MIPI_DCS_EXIT_INVERT_MODE);
-#endif
+#endif /* MIPI_DISPLAY_INVERT */
 
     mipi_display_write_command(MIPI_DCS_EXIT_SLEEP_MODE);
     sleep_ms(200);
@@ -287,11 +287,11 @@ mipi_display_init()
     }
 
     /* Initialise vsync pin */
-    if (MIPI_DISPLAY_PIN_VSYNC > 0) {
-        gpio_set_function(MIPI_DISPLAY_PIN_VSYNC, GPIO_FUNC_SIO);
-        gpio_set_dir(MIPI_DISPLAY_PIN_VSYNC, GPIO_IN);
-        gpio_pull_up(MIPI_DISPLAY_PIN_VSYNC);
-    }
+#if MIPI_DISPLAY_PIN_TE > 0
+    gpio_set_function(MIPI_DISPLAY_PIN_TE, GPIO_FUNC_SIO);
+    gpio_set_dir(MIPI_DISPLAY_PIN_TE, GPIO_IN);
+    gpio_pull_up(MIPI_DISPLAY_PIN_TE);
+#endif /* MIPI_DISPLAY_PIN_TE > 0 */
 
     /* Set the default viewport to full screen. */
     mipi_display_set_address(0, 0, MIPI_DISPLAY_WIDTH - 1, MIPI_DISPLAY_HEIGHT - 1);
