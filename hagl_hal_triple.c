@@ -81,7 +81,7 @@ flush(void *self)
 
 #if HAGL_HAL_PIXEL_SIZE==1
     /* Flush the current back buffer. */
-    return mipi_display_write(0, 0, bb.width, bb.height, (uint8_t *) buffer);
+    return mipi_display_write_xywh(0, 0, bb.width, bb.height, (uint8_t *) buffer);
 #endif /* HAGL_HAL_PIXEL_SIZE==1 */
 
 #if HAGL_HAL_PIXEL_SIZE==2
@@ -95,8 +95,8 @@ flush(void *self)
             line[x * 2] = *(ptr);
             line[x * 2 + 1] = *(ptr++);
         }
-        sent += mipi_display_write(0, y * 2, MIPI_DISPLAY_WIDTH, 1, (uint8_t *) line);
-        sent += mipi_display_write(0, y * 2 + 1, MIPI_DISPLAY_WIDTH, 1, (uint8_t *) line);
+        sent += mipi_display_write_xywh(0, y * 2, MIPI_DISPLAY_WIDTH, 1, (uint8_t *) line);
+        sent += mipi_display_write_xywh(0, y * 2 + 1, MIPI_DISPLAY_WIDTH, 1, (uint8_t *) line);
     }
     return sent;
 #endif /* HAGL_HAL_PIXEL_SIZE==2 */
