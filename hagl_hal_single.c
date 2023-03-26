@@ -60,7 +60,7 @@ put_pixel(void *self, int16_t x0, int16_t y0, hagl_color_t color)
 static void
 blit(void *self, int16_t x0, int16_t y0, hagl_bitmap_t *src)
 {
-    mipi_display_write(x0, y0, src->width, src->height, (uint8_t *) src->buffer);
+    mipi_display_write_xywh(x0, y0, src->width, src->height, (uint8_t *) src->buffer);
 }
 
 static void
