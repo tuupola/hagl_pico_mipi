@@ -326,7 +326,7 @@ mipi_display_init()
 }
 
 size_t
-mipi_display_fill(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *_color)
+mipi_display_fill_xywh(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *_color)
 {
     if (0 == w || 0 == h) {
         return 0;

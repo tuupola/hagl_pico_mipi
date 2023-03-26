@@ -66,13 +66,13 @@ blit(void *self, int16_t x0, int16_t y0, hagl_bitmap_t *src)
 static void
 hline(void *self, int16_t x0, int16_t y0, uint16_t width, hagl_color_t color)
 {
-    mipi_display_fill(x0, y0, width, 1, &color);
+    mipi_display_fill_xywh(x0, y0, width, 1, &color);
 }
 
 static void
 vline(void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color)
 {
-    mipi_display_fill(x0, y0, 1, height, &color);
+    mipi_display_fill_xywh(x0, y0, 1, height, &color);
 }
 
 void
