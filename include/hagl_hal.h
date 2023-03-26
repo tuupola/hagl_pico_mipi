@@ -81,7 +81,7 @@ extern "C" {
 #define MIPI_DISPLAY_PIN_POWER      (-1)
 #endif
 #ifndef MIPI_DISPLAY_PIN_TE
-#define MIPI_DISPLAY_PIN_TE      (-1)
+#define MIPI_DISPLAY_PIN_TE         (-1)
 #endif
 
 #ifndef MIPI_DISPLAY_PIXEL_FORMAT
