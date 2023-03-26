@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Added
 
 
-- Support for `MIPI_DISPLAY_PIN_VSYNC` setting ([#45](https://github.com/tuupola/hagl_pico_mipi/pull/45)). Used for boards such as Pimoroni PicoSystem which have the Tearing Effect (TE) pin connected.
+- Support for `MIPI_DISPLAY_PIN_TE` setting ([#45](https://github.com/tuupola/hagl_pico_mipi/pull/45)). Used for boards such as Pimoroni PicoSystem which have the Tearing Effect (TE) pin connected.
 
 ## [0.4.0](https://github.com/tuupola/hagl_pico_mipi/compare/0.3.0...0.4.0) - 2023-03-11
 

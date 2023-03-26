@@ -80,8 +80,8 @@ extern "C" {
 #ifndef MIPI_DISPLAY_PIN_POWER
 #define MIPI_DISPLAY_PIN_POWER      (-1)
 #endif
-#ifndef MIPI_DISPLAY_PIN_VSYNC
-#define MIPI_DISPLAY_PIN_VSYNC      (-1)
+#ifndef MIPI_DISPLAY_PIN_TE
+#define MIPI_DISPLAY_PIN_TE      (-1)
 #endif
 
 #ifndef MIPI_DISPLAY_PIXEL_FORMAT
