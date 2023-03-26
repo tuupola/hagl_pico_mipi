@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Changed
 
 - SPI data write functions are now inlined to improve performance ([#43](https://github.com/tuupola/hagl_pico_mipi/pull/43)).
+- Rename `mipi_display_write()` to `mipi_display_write_xywh()` ([#51](https://github.com/tuupola/hagl_pico_mipi/pull/51)).
 
 ### Added
 
