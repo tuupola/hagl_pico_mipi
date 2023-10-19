@@ -281,7 +281,7 @@ mipi_display_init()
     hagl_hal_debug("Enable vsync notification on pin %d\n", MIPI_DISPLAY_PIN_TE);
 #endif /* MIPI_DISPLAY_PIN_TE > 0 */
 
-#ifdef MIPI_DISPLAY_INVERT
+#if MIPI_DISPLAY_INVERT
     mipi_display_write_command(MIPI_DCS_ENTER_INVERT_MODE);
     hagl_hal_debug("%s\n", "Inverting display.");
 #else
