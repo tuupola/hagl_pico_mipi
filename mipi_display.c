@@ -118,7 +118,7 @@ mipi_display_write_data_dma(const uint8_t *buffer, size_t length)
 static void
 mipi_display_dma_init()
 {
-    hagl_hal_debug("%s\n", "initialising DMA.");
+    hagl_hal_debug("initialising DMA.\n");
 
     dma_channel = dma_claim_unused_channel(true);
     dma_channel_config channel_config = dma_channel_get_default_config(dma_channel);
@@ -206,7 +206,7 @@ mipi_display_set_address_xy(uint16_t x1, uint16_t y1)
 static void
 mipi_display_spi_master_init()
 {
-    hagl_hal_debug("%s\n", "Initialising SPI.");
+    hagl_hal_debug("Initialising SPI.\n");
 
     gpio_set_function(MIPI_DISPLAY_PIN_DC, GPIO_FUNC_SIO);
     gpio_set_dir(MIPI_DISPLAY_PIN_DC, GPIO_OUT);
@@ -239,15 +239,15 @@ void
 mipi_display_init()
 {
 #ifdef HAGL_HAL_USE_SINGLE_BUFFER
-    hagl_hal_debug("%s\n", "Initialising single buffered display.");
+    hagl_hal_debug("Initialising single buffered display.\n");
 #endif /* HAGL_HAL_USE_SINGLE_BUFFER */
 
 #ifdef HAGL_HAL_USE_DOUBLE_BUFFER
-    hagl_hal_debug("%s\n", "Initialising double buffered display.");
+    hagl_hal_debug("Initialising double buffered display.\n");
 #endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
 
 #ifdef HAGL_HAL_USE_TRIPLE_BUFFER
-    hagl_hal_debug("%s\n", "Initialising triple buffered display.");
+    hagl_hal_debug("Initialising triple buffered display.\n");
 #endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
 
     /* Init the spi driver. */
@@ -283,7 +283,7 @@ mipi_display_init()
 
 #ifdef MIPI_DISPLAY_INVERT
     mipi_display_write_command(MIPI_DCS_ENTER_INVERT_MODE);
-    hagl_hal_debug("%s\n", "Inverting display.");
+    hagl_hal_debug("Inverting display.\n");
 #else
     mipi_display_write_command(MIPI_DCS_EXIT_INVERT_MODE);
 #endif /* MIPI_DISPLAY_INVERT */
