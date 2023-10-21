@@ -288,6 +288,10 @@ mipi_display_init()
     mipi_display_write_command(MIPI_DCS_EXIT_INVERT_MODE);
 #endif /* MIPI_DISPLAY_INVERT */
 
+    /* Clear the framebuffer before turning the display on to avoid snow. */
+    uint16_t black = 0x0000;
+    mipi_display_fill_xywh(0, 0, MIPI_DISPLAY_WIDTH, MIPI_DISPLAY_HEIGHT, (void *)&black);
+
     mipi_display_write_command(MIPI_DCS_EXIT_SLEEP_MODE);
     sleep_ms(200);
 
