@@ -45,7 +45,9 @@ SPDX-License-Identifier: MIT
 #include "mipi_dcs.h"
 #include "mipi_display.h"
 
+#ifdef HAGL_HAL_USE_DMA
 static int dma_channel;
+#endif
 
 static inline uint16_t
 htons(uint16_t i)
@@ -72,8 +74,6 @@ mipi_display_write_command(const uint8_t command)
 static void
 mipi_display_write_data(const uint8_t *data, size_t length)
 {
-    size_t sent = 0;
-
     if (0 == length) {
         return;
     };
@@ -97,6 +97,7 @@ mipi_display_write_data(const uint8_t *data, size_t length)
     gpio_put(MIPI_DISPLAY_PIN_CS, 1);
 }
 
+#ifdef HAGL_HAL_USE_DMA
 static void
 mipi_display_write_data_dma(const uint8_t *buffer, size_t length)
 {
@@ -131,6 +132,7 @@ mipi_display_dma_init()
     dma_channel_set_config(dma_channel, &channel_config, false);
     dma_channel_set_write_addr(dma_channel, &spi_get_hw(MIPI_DISPLAY_SPI_PORT)->dr, false);
 }
+#endif
 
 static void
 mipi_display_read_data(uint8_t *data, size_t length)
@@ -143,7 +145,6 @@ mipi_display_read_data(uint8_t *data, size_t length)
 static void
 mipi_display_set_address_xyxy(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 {
-    uint8_t command;
     uint8_t data[4];
     static uint16_t prev_x1, prev_x2, prev_y1, prev_y2;
 
@@ -184,7 +185,6 @@ mipi_display_set_address_xyxy(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2
 static void
 mipi_display_set_address_xy(uint16_t x1, uint16_t y1)
 {
-    uint8_t command;
     uint8_t data[2];
 
     x1 = x1 + MIPI_DISPLAY_OFFSET_X;
@@ -227,12 +227,14 @@ mipi_display_spi_master_init()
     spi_init(MIPI_DISPLAY_SPI_PORT, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
     spi_set_format(MIPI_DISPLAY_SPI_PORT, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
 
+#if defined(HAGL_HAL_DEBUG) && HAGL_HAL_DEBUG
     uint32_t baud = spi_set_baudrate(MIPI_DISPLAY_SPI_PORT, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
     uint32_t peri = clock_get_hz(clk_peri);
     uint32_t sys = clock_get_hz(clk_sys);
     hagl_hal_debug("Baudrate is set to %d.\n", baud);
     hagl_hal_debug("clk_peri %d.\n", peri);
     hagl_hal_debug("clk_sys %d.\n", sys);
+#endif
 }
 
 void
