@@ -43,6 +43,10 @@ extern "C" {
 
 #include "hagl_hal_color.h"
 
+#ifndef HAGL_HAL_DEBUG
+#define HAGL_HAL_DEBUG       (0)
+#endif
+
 #define hagl_hal_debug(fmt, ...) \
     do { if (HAGL_HAL_DEBUG) printf("[HAGL HAL] " fmt, __VA_ARGS__); } while (0)
 
