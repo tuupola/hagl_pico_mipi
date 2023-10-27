@@ -231,9 +231,9 @@ mipi_display_spi_master_init()
     uint32_t baud = spi_set_baudrate(MIPI_DISPLAY_SPI_PORT, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
     uint32_t peri = clock_get_hz(clk_peri);
     uint32_t sys = clock_get_hz(clk_sys);
-    hagl_hal_debug("Baudrate is set to %d.\n", baud);
-    hagl_hal_debug("clk_peri %d.\n", peri);
-    hagl_hal_debug("clk_sys %d.\n", sys);
+    hagl_hal_debug("Baudrate is set to %lu.\n", baud);
+    hagl_hal_debug("clk_peri %lu.\n", peri);
+    hagl_hal_debug("clk_sys %lu.\n", sys);
 #endif
 }
 
