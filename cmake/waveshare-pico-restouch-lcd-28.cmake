@@ -1,5 +1,5 @@
 #
-# Waveshare Pico-LCD-2 (320x240 ST7789VW)
+# Waveshare Pico-ResTouch-LCD-2.8 (320x240 ST7789VW)
 # https://www.waveshare.com/wiki/Pico-ResTouch-LCD-2.8
 # https://botland.store/search?s=5904422347215
 #
