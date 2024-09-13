@@ -33,5 +33,5 @@ target_compile_definitions(firmware PRIVATE
     # MIPI_DISPLAY_OFFSET_X=0
     # MIPI_DISPLAY_OFFSET_Y=0
     
-    # MIPI_DISPLAY_INVERT=1
+    MIPI_DISPLAY_INVERT=1
 )
