@@ -1,6 +1,6 @@
 #
 # Waveshare Pico-LCD-1.8 (160x128 ST7735S)
-# https://www.waveshare.com/pico-lcd-1.8.htm
+# http://www.waveshare.com/wiki/Pico-LCD-1.8
 # https://botland.store/search?s=5904422371906
 #
 target_compile_definitions(firmware PRIVATE
