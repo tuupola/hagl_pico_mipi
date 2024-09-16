@@ -294,12 +294,12 @@ mipi_display_init()
     mipi_display_write_command(MIPI_DCS_SET_DISPLAY_ON);
     sleep_ms(200);
 
+#if MIPI_DISPLAY_PIN_BL > 0
     /* Enable backlight */
-    if (MIPI_DISPLAY_PIN_BL > 0) {
-        gpio_set_function(MIPI_DISPLAY_PIN_BL, GPIO_FUNC_SIO);
-        gpio_set_dir(MIPI_DISPLAY_PIN_BL, GPIO_OUT);
-        gpio_put(MIPI_DISPLAY_PIN_BL, MIPI_DISPLAY_PIN_BL_ACTIVE);
-    }
+    gpio_set_function(MIPI_DISPLAY_PIN_BL, GPIO_FUNC_SIO);
+    gpio_set_dir(MIPI_DISPLAY_PIN_BL, GPIO_OUT);
+    gpio_put(MIPI_DISPLAY_PIN_BL, MIPI_DISPLAY_PIN_BL_ACTIVE);
+#endif /* MIPI_DISPLAY_PIN_BL > 0 */
 
     /* Enable power */
     if (MIPI_DISPLAY_PIN_POWER > 0) {
