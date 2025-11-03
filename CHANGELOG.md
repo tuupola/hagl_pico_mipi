@@ -15,8 +15,15 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-
 - Support for `MIPI_DISPLAY_PIN_TE` setting ([#45](https://github.com/tuupola/hagl_pico_mipi/pull/45), [#49](https://github.com/tuupola/hagl_pico_mipi/pull/49)). Used for boards such as Pimoroni PicoSystem which have the Tearing Effect (TE) pin connected.
+- Add config file for Waveshare 1.14inch LCD Module (240x135 ST7789VW) ([#54](https://github.com/tuupola/hagl_pico_mipi/pull/54)).
+- Add config for Waveshare Pico-LCD-2 (320x240 ST7789V) ([#61](https://github.com/tuupola/hagl_pico_mipi/pull/61)).
+- Add config for Waveshare Pico-LCD-1.8 (160x128 ST7735S) ([#62](https://github.com/tuupola/hagl_pico_mipi/pull/62)).
+- Add config for Waveshare Pico-ResTouch-LCD-2.8 (320x240 ST7789VW) ([#63](https://github.com/tuupola/hagl_pico_mipi/pull/63)).
+- Add config for Waveshare Pico-LCD-1.14 (240x135 ST7789V) ([#64](https://github.com/tuupola/hagl_pico_mipi/pull/64)).
+- Add config file for Pimoroni Pico Display Pack 2.0 (320 x 240 ST7789) ([#69](https://github.com/tuupola/hagl_pico_mipi/pull/69)).
+- Add config for Waveshare RP2040-GEEK (240x135 ST7789VW) ([#70](https://github.com/tuupola/hagl_pico_mipi/pull/70)).
+
 
 ## [0.4.0](https://github.com/tuupola/hagl_pico_mipi/compare/0.3.0...0.4.0) - 2023-03-11
 
