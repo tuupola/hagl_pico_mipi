@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [0.5.0-dev](https://github.com/tuupola/hagl_pico_mipi/compare/0.4.0...master) - unreleased
+## [0.5.0](https://github.com/tuupola/hagl_pico_mipi/compare/0.4.0...0.5.0) - 2026-03-28
 
 ### Fixed
 - Removed stack usage from hline and vline functions ([#41](https://github.com/tuupola/hagl_pico_mipi/pull/41)).
