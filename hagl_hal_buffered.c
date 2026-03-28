@@ -31,9 +31,10 @@ SPDX-License-Identifier: MIT
 
 -cut-
 
-This is the backend when double buffering is enabled. The GRAM of the
-display driver chip is the framebuffer. The memory allocated by the
-backend is the back buffer. Total two buffers.
+This is the backend when double or triple buffering is enabled. The GRAM of
+the display driver chip is the framebuffer. The memory allocated by the
+backend is the back buffer (double) or two back buffers (triple). Total two
+or three buffers.
 
 Note that all coordinates are already clipped in the main library itself.
 Backend does not need to validate the coordinates, they can always be
@@ -42,8 +43,6 @@ assumed to be valid.
 */
 
 #include "hagl_hal.h"
-
-#ifdef HAGL_HAL_USE_DOUBLE_BUFFER
 
 #include <string.h>
 #include <hardware/gpio.h>
@@ -62,19 +61,30 @@ static hagl_bitmap_t bb;
 static size_t
 flush(void *self)
 {
+    const hagl_backend_t *backend = self;
+
+    uint8_t *buffer = bb.buffer;
+
+#if HAGL_HAL_BUFFER_COUNT == 3
+    if (bb.buffer == backend->buffer) {
+        bb.buffer = backend->buffer2;
+    } else {
+        bb.buffer = backend->buffer;
+    }
+#endif
+
 #if MIPI_DISPLAY_PIN_TE > 0
     while (!gpio_get(MIPI_DISPLAY_PIN_TE)) {}
-#endif /* MIPI_DISPLAY_PIN_TE > 0 */
+#endif
 
 #if HAGL_HAL_PIXEL_SIZE==1
-    /* Flush the whole back buffer. */
-    return mipi_display_write_xywh(0, 0, bb.width, bb.height, (uint8_t *) bb.buffer);
-#endif /* HAGL_HAL_PIXEL_SIZE==1 */
+    return mipi_display_write_xywh(0, 0, bb.width, bb.height, (uint8_t *) buffer);
+#endif
 
 #if HAGL_HAL_PIXEL_SIZE==2
     static hagl_color_t line[MIPI_DISPLAY_WIDTH];
 
-    hagl_color_t *ptr = (hagl_color_t *) bb.buffer;
+    hagl_color_t *ptr = (hagl_color_t *) buffer;
     size_t sent = 0;
 
     for (uint16_t y = 0; y < HAGL_PICO_MIPI_DISPLAY_HEIGHT; y++) {
@@ -86,7 +96,7 @@ flush(void *self)
         sent += mipi_display_write_xywh(0, y * 2 + 1, MIPI_DISPLAY_WIDTH, 1, (uint8_t *) line);
     }
     return sent;
-#endif /* HAGL_HAL_PIXEL_SIZE==2 */
+#endif
 }
 
 static void
@@ -99,7 +109,6 @@ static hagl_color_t
 get_pixel(void *self, int16_t x0, int16_t y0)
 {
     return bb.get_pixel(&bb, x0, y0);
-
 }
 
 static void
@@ -138,6 +147,15 @@ hagl_hal_init(hagl_backend_t *backend)
         hagl_hal_debug("Using provided back buffer at address %p.\n", (void *) backend->buffer);
     }
 
+#if HAGL_HAL_BUFFER_COUNT == 3
+    if (!backend->buffer2) {
+        backend->buffer2 = calloc(HAGL_PICO_MIPI_DISPLAY_WIDTH * HAGL_PICO_MIPI_DISPLAY_HEIGHT * (HAGL_PICO_MIPI_DISPLAY_DEPTH / 8), sizeof(uint8_t));
+        hagl_hal_debug("Allocated second back buffer to address %p.\n", (void *) backend->buffer2);
+    } else {
+        hagl_hal_debug("Using provided second back buffer at address %p.\n", (void *) backend->buffer2);
+    }
+#endif
+
     backend->width = HAGL_PICO_MIPI_DISPLAY_WIDTH;
     backend->height = HAGL_PICO_MIPI_DISPLAY_HEIGHT;
     backend->depth = HAGL_PICO_MIPI_DISPLAY_DEPTH;
@@ -151,5 +169,3 @@ hagl_hal_init(hagl_backend_t *backend)
 
     hagl_bitmap_init(&bb, backend->width, backend->height, backend->depth, backend->buffer);
 }
-
-#endif /* HAGL_HAL_USE_DOUBLE_BUFFER */

@@ -238,17 +238,7 @@ mipi_display_spi_master_init()
 void
 mipi_display_init()
 {
-#ifdef HAGL_HAL_USE_SINGLE_BUFFER
-    hagl_hal_debug("%s\n", "Initialising single buffered display.");
-#endif /* HAGL_HAL_USE_SINGLE_BUFFER */
-
-#ifdef HAGL_HAL_USE_DOUBLE_BUFFER
-    hagl_hal_debug("%s\n", "Initialising double buffered display.");
-#endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
-
-#ifdef HAGL_HAL_USE_TRIPLE_BUFFER
-    hagl_hal_debug("%s\n", "Initialising triple buffered display.");
-#endif /* HAGL_HAL_USE_DOUBLE_BUFFER */
+    hagl_hal_debug("Initialising %d buffered display.\n", HAGL_HAL_BUFFER_COUNT);
 
     /* Init the spi driver. */
     mipi_display_spi_master_init();
@@ -376,18 +366,15 @@ mipi_display_write_xywh(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_
     int32_t y2 = y1 + h - 1;
     uint32_t size = w * h;
 
-#ifdef HAGL_HAL_USE_SINGLE_BUFFER
     mipi_display_set_address_xyxy(x1, y1, x2, y2);
-    mipi_display_write_data(buffer, size * MIPI_DISPLAY_DEPTH / 8);
-#endif /* HAGL_HAL_SINGLE_BUFFER */
-
 #ifdef HAGL_HAS_HAL_BACK_BUFFER
-    mipi_display_set_address_xyxy(x1, y1, x2, y2);
 #ifdef HAGL_HAL_USE_DMA
     mipi_display_write_data_dma(buffer, size * MIPI_DISPLAY_DEPTH / 8);
 #else
     mipi_display_write_data(buffer, size * MIPI_DISPLAY_DEPTH / 8);
 #endif /* HAGL_HAL_USE_DMA */
+#else
+    mipi_display_write_data(buffer, size * MIPI_DISPLAY_DEPTH / 8);
 #endif /* HAGL_HAS_HAL_BACK_BUFFER */
     /* This should also include the bytes for writing the commands. */
     return size * MIPI_DISPLAY_DEPTH / 8;
