@@ -30,20 +30,18 @@ graphics library: https://github.com/tuupola/hagl_pico_mipi
 SPDX-License-Identifier: MIT
 
 */
-#include <time.h>
-#include <sys/times.h>
 #include <pico/stdlib.h>
+#include <sys/times.h>
+#include <time.h>
 
-clock_t
-_times(struct tms *buffer)
-{
+clock_t _times(struct tms *buffer) {
     /* Should be a 100Hz tick. Probably because by default arm libgloss */
     /* assumes usage of SWI_Clock which is in centiseconds. */
-    clock_t timeval =  time_us_64() / 10000;
+    clock_t timeval = time_us_64() / 10000;
 
     if (buffer) {
-        buffer->tms_utime  = timeval;
-        buffer->tms_stime  = 0;
+        buffer->tms_utime = timeval;
+        buffer->tms_stime = 0;
         buffer->tms_cutime = 0;
         buffer->tms_cstime = 0;
     }
