@@ -124,12 +124,7 @@ hline(const void *self, int16_t x0, int16_t y0, uint16_t width, hagl_color_t col
 }
 
 static void
-<<<<<<< HEAD
-vline(void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color)
-{
-=======
 vline(const void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color) {
->>>>>>> 9ca3522 (Make self const)
     bb.vline(&bb, x0, y0, height, color);
 }
 
