@@ -38,6 +38,7 @@ SPDX-License-Identifier: MIT
 extern "C" {
 #endif
 
+/* clang-format off */
 #define MIPI_DCS_NOP                        0x00
 #define MIPI_DCS_SOFT_RESET                 0x01
 #define MIPI_DCS_GET_COMPRESSION_MODE       0x03
@@ -113,6 +114,7 @@ extern "C" {
 
 #define MIPI_DCS_SET_TEAR_ON_VSYNC          0x00
 #define MIPI_DCS_SET_TEAR_ON_VSYNC_HSYNC    0x01
+/* clang-format on */
 
 #ifdef __cplusplus
 }
