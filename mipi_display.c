@@ -36,10 +36,10 @@ SPDX-License-Identifier: MIT
 // #include <string.h>
 // #include <stdatomic.h>
 
-#include <hardware/clocks.h>
+#include <hardware/spi.h>
 #include <hardware/dma.h>
 #include <hardware/gpio.h>
-#include <hardware/spi.h>
+#include <hardware/clocks.h>
 #include <pico/time.h>
 
 #include "mipi_dcs.h"
@@ -47,12 +47,16 @@ SPDX-License-Identifier: MIT
 
 static int dma_channel;
 
-static inline uint16_t htons(uint16_t i) {
-    __asm("rev16 %0, %0" : "+l"(i) : :);
+static inline uint16_t
+htons(uint16_t i)
+{
+    __asm ("rev16 %0, %0" : "+l" (i) : : );
     return i;
 }
 
-static void mipi_display_write_command(const uint8_t command) {
+static void
+mipi_display_write_command(const uint8_t command)
+{
     /* Set DC low to denote incoming command. */
     gpio_put(MIPI_DISPLAY_PIN_DC, 0);
 
@@ -65,7 +69,9 @@ static void mipi_display_write_command(const uint8_t command) {
     gpio_put(MIPI_DISPLAY_PIN_CS, 1);
 }
 
-static void mipi_display_write_data(const uint8_t *data, size_t length) {
+static void
+mipi_display_write_data(const uint8_t *data, size_t length)
+{
     size_t sent = 0;
 
     if (0 == length) {
@@ -79,21 +85,21 @@ static void mipi_display_write_data(const uint8_t *data, size_t length) {
     gpio_put(MIPI_DISPLAY_PIN_CS, 0);
 
     for (size_t i = 0; i < length; ++i) {
-        while (!spi_is_writable(MIPI_DISPLAY_SPI_PORT)) {
-        };
-        spi_get_hw(MIPI_DISPLAY_SPI_PORT)->dr = (uint32_t)data[i];
+        while (!spi_is_writable(MIPI_DISPLAY_SPI_PORT)) {};
+        spi_get_hw(MIPI_DISPLAY_SPI_PORT)->dr = (uint32_t) data[i];
     }
 
     /* Wait for shifting to finish. */
-    while (spi_get_hw(MIPI_DISPLAY_SPI_PORT)->sr & SPI_SSPSR_BSY_BITS) {
-    };
+    while (spi_get_hw(MIPI_DISPLAY_SPI_PORT)->sr & SPI_SSPSR_BSY_BITS) {};
     spi_get_hw(MIPI_DISPLAY_SPI_PORT)->icr = SPI_SSPICR_RORIC_BITS;
 
     /* Set CS high to ignore any traffic on SPI bus. */
     gpio_put(MIPI_DISPLAY_PIN_CS, 1);
 }
 
-static void mipi_display_write_data_dma(const uint8_t *buffer, size_t length) {
+static void
+mipi_display_write_data_dma(const uint8_t *buffer, size_t length)
+{
     if (0 == length) {
         return;
     };
@@ -109,7 +115,9 @@ static void mipi_display_write_data_dma(const uint8_t *buffer, size_t length) {
     dma_channel_set_read_addr(dma_channel, buffer, true);
 }
 
-static void mipi_display_dma_init() {
+static void
+mipi_display_dma_init()
+{
     hagl_hal_debug("%s\n", "initialising DMA.");
 
     dma_channel = dma_claim_unused_channel(true);
@@ -121,19 +129,20 @@ static void mipi_display_dma_init() {
         channel_config_set_dreq(&channel_config, DREQ_SPI1_TX);
     }
     dma_channel_set_config(dma_channel, &channel_config, false);
-    dma_channel_set_write_addr(
-        dma_channel, &spi_get_hw(MIPI_DISPLAY_SPI_PORT)->dr, false
-    );
+    dma_channel_set_write_addr(dma_channel, &spi_get_hw(MIPI_DISPLAY_SPI_PORT)->dr, false);
 }
 
-static void mipi_display_read_data(uint8_t *data, size_t length) {
+static void
+mipi_display_read_data(uint8_t *data, size_t length)
+{
     if (0 == length) {
         return;
     };
 }
 
 static void
-mipi_display_set_address_xyxy(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {
+mipi_display_set_address_xyxy(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
+{
     uint8_t command;
     uint8_t data[4];
     static uint16_t prev_x1, prev_x2, prev_y1, prev_y2;
@@ -172,7 +181,9 @@ mipi_display_set_address_xyxy(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2
     mipi_display_write_command(MIPI_DCS_WRITE_MEMORY_START);
 }
 
-static void mipi_display_set_address_xy(uint16_t x1, uint16_t y1) {
+static void
+mipi_display_set_address_xy(uint16_t x1, uint16_t y1)
+{
     uint8_t command;
     uint8_t data[2];
 
@@ -192,7 +203,9 @@ static void mipi_display_set_address_xy(uint16_t x1, uint16_t y1) {
     mipi_display_write_command(MIPI_DCS_WRITE_MEMORY_START);
 }
 
-static void mipi_display_spi_master_init() {
+static void
+mipi_display_spi_master_init()
+{
     hagl_hal_debug("%s\n", "Initialising SPI.");
 
     gpio_set_function(MIPI_DISPLAY_PIN_DC, GPIO_FUNC_SIO);
@@ -201,7 +214,7 @@ static void mipi_display_spi_master_init() {
     gpio_set_function(MIPI_DISPLAY_PIN_CS, GPIO_FUNC_SIO);
     gpio_set_dir(MIPI_DISPLAY_PIN_CS, GPIO_OUT);
 
-    gpio_set_function(MIPI_DISPLAY_PIN_CLK, GPIO_FUNC_SPI);
+    gpio_set_function(MIPI_DISPLAY_PIN_CLK,  GPIO_FUNC_SPI);
     gpio_set_function(MIPI_DISPLAY_PIN_MOSI, GPIO_FUNC_SPI);
 
     if (MIPI_DISPLAY_PIN_MISO > 0) {
@@ -214,8 +227,7 @@ static void mipi_display_spi_master_init() {
     spi_init(MIPI_DISPLAY_SPI_PORT, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
     spi_set_format(MIPI_DISPLAY_SPI_PORT, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
 
-    uint32_t baud =
-        spi_set_baudrate(MIPI_DISPLAY_SPI_PORT, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
+    uint32_t baud = spi_set_baudrate(MIPI_DISPLAY_SPI_PORT, MIPI_DISPLAY_SPI_CLOCK_SPEED_HZ);
     uint32_t peri = clock_get_hz(clk_peri);
     uint32_t sys = clock_get_hz(clk_sys);
     hagl_hal_debug("Baudrate is set to %d.\n", baud);
@@ -223,7 +235,9 @@ static void mipi_display_spi_master_init() {
     hagl_hal_debug("clk_sys %d.\n", sys);
 }
 
-void mipi_display_init() {
+void
+mipi_display_init()
+{
 #ifdef HAGL_HAL_USE_SINGLE_BUFFER
     hagl_hal_debug("%s\n", "Initialising single buffered display.");
 #endif /* HAGL_HAL_USE_SINGLE_BUFFER */
@@ -256,14 +270,14 @@ void mipi_display_init() {
     sleep_ms(200);
 
     mipi_display_write_command(MIPI_DCS_SET_ADDRESS_MODE);
-    mipi_display_write_data(&(uint8_t){MIPI_DISPLAY_ADDRESS_MODE}, 1);
+    mipi_display_write_data(&(uint8_t) {MIPI_DISPLAY_ADDRESS_MODE}, 1);
 
     mipi_display_write_command(MIPI_DCS_SET_PIXEL_FORMAT);
-    mipi_display_write_data(&(uint8_t){MIPI_DISPLAY_PIXEL_FORMAT}, 1);
+    mipi_display_write_data(&(uint8_t) {MIPI_DISPLAY_PIXEL_FORMAT}, 1);
 
 #if MIPI_DISPLAY_PIN_TE > 0
     mipi_display_write_command(MIPI_DCS_SET_TEAR_ON);
-    mipi_display_write_data(&(uint8_t){MIPI_DCS_SET_TEAR_ON_VSYNC}, 1);
+    mipi_display_write_data(&(uint8_t) {MIPI_DCS_SET_TEAR_ON_VSYNC}, 1);
     hagl_hal_debug("Enable vsync notification on pin %d\n", MIPI_DISPLAY_PIN_TE);
 #endif /* MIPI_DISPLAY_PIN_TE > 0 */
 
@@ -312,7 +326,8 @@ void mipi_display_init() {
 }
 
 size_t
-mipi_display_fill_xywh(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *_color) {
+mipi_display_fill_xywh(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *_color)
+{
     if (0 == w || 0 == h) {
         return 0;
     }
@@ -334,14 +349,12 @@ mipi_display_fill_xywh(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *_
     spi_set_format(MIPI_DISPLAY_SPI_PORT, 16, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
 
     while (size--) {
-        while (!spi_is_writable(MIPI_DISPLAY_SPI_PORT)) {
-        };
-        spi_get_hw(MIPI_DISPLAY_SPI_PORT)->dr = (uint32_t)htons(*color);
+        while (!spi_is_writable(MIPI_DISPLAY_SPI_PORT)) {};
+        spi_get_hw(MIPI_DISPLAY_SPI_PORT)->dr = (uint32_t) htons(*color);
     }
 
     /* Wait for shifting to finish. */
-    while (spi_get_hw(MIPI_DISPLAY_SPI_PORT)->sr & SPI_SSPSR_BSY_BITS) {
-    };
+    while (spi_get_hw(MIPI_DISPLAY_SPI_PORT)->sr & SPI_SSPSR_BSY_BITS) {};
     spi_get_hw(MIPI_DISPLAY_SPI_PORT)->icr = SPI_SSPICR_RORIC_BITS;
 
     spi_set_format(MIPI_DISPLAY_SPI_PORT, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
@@ -352,9 +365,9 @@ mipi_display_fill_xywh(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, void *_
     return size;
 }
 
-size_t mipi_display_write_xywh(
-    uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_t *buffer
-) {
+size_t
+mipi_display_write_xywh(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_t *buffer)
+{
     if (0 == w || 0 == h) {
         return 0;
     }
@@ -380,7 +393,9 @@ size_t mipi_display_write_xywh(
     return size * MIPI_DISPLAY_DEPTH / 8;
 }
 
-size_t mipi_display_write_xy(uint16_t x1, uint16_t y1, uint8_t *buffer) {
+size_t
+mipi_display_write_xy(uint16_t x1, uint16_t y1, uint8_t *buffer)
+{
     mipi_display_set_address_xy(x1, y1);
     mipi_display_write_data(buffer, MIPI_DISPLAY_DEPTH / 8);
 
@@ -389,7 +404,9 @@ size_t mipi_display_write_xy(uint16_t x1, uint16_t y1, uint8_t *buffer) {
 }
 
 /* TODO: This most likely does not work with dma atm. */
-void mipi_display_ioctl(const uint8_t command, uint8_t *data, size_t size) {
+void
+mipi_display_ioctl(const uint8_t command, uint8_t *data, size_t size)
+{
     switch (command) {
         case MIPI_DCS_GET_COMPRESSION_MODE:
         case MIPI_DCS_GET_DISPLAY_ID:
@@ -418,6 +435,8 @@ void mipi_display_ioctl(const uint8_t command, uint8_t *data, size_t size) {
     }
 }
 
-void mipi_display_close() {
+void
+mipi_display_close()
+{
     spi_deinit(MIPI_DISPLAY_SPI_PORT);
 }

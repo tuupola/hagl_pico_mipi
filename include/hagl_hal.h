@@ -38,12 +38,11 @@ SPDX-License-Identifier: MIT
 extern "C" {
 #endif
 
-#include <hagl/backend.h>
 #include <stdint.h>
+#include <hagl/backend.h>
 
 #include "hagl_hal_color.h"
 
-/* clang-format off */
 #ifndef HAGL_HAL_DEBUG
 #define HAGL_HAL_DEBUG       (0)
 #endif
@@ -134,7 +133,6 @@ extern "C" {
 #ifdef HAGL_HAL_USE_SINGLE_BUFFER
 #undef HAGL_HAS_HAL_BACK_BUFFER
 #endif
-/* clang-format on */
 
 /**
  * Initialize the HAL
