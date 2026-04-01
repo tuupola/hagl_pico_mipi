@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [0.6.0](https://github.com/tuupola/hagl_pico_mipi/compare/0.5.0...master) unreleased
+### Changed
+- Applied new clang format ([#72](https://github.com/tuupola/hagl_pico_mipi/pull/72)).
+
 ## [0.5.0](https://github.com/tuupola/hagl_pico_mipi/compare/0.4.0...0.5.0) - 2026-03-28
 
 ### Fixed
