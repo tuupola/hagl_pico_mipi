@@ -61,9 +61,7 @@ valid.
 
 static hagl_bitmap_t bb;
 
-static size_t
-flush(void *self)
-{
+static size_t flush(const void *self) {
     const hagl_backend_t *backend = self;
 
     uint8_t *buffer = bb.buffer;
@@ -102,39 +100,36 @@ flush(void *self)
 #endif /* HAGL_HAL_PIXEL_SIZE==2 */
 }
 
-static void
-put_pixel(void *self, int16_t x0, int16_t y0, hagl_color_t color)
-{
+static void put_pixel(const void *self, int16_t x0, int16_t y0, hagl_color_t color) {
     bb.put_pixel(&bb, x0, y0, color);
 }
 
-static hagl_color_t
-get_pixel(void *self, int16_t x0, int16_t y0)
-{
+static hagl_color_t get_pixel(const void *self, int16_t x0, int16_t y0) {
     return bb.get_pixel(&bb, x0, y0);
 }
 
-static void
-blit(void *self, int16_t x0, int16_t y0, hagl_bitmap_t *src)
-{
+static void blit(const void *self, int16_t x0, int16_t y0, const void *src) {
     bb.blit(&bb, x0, y0, src);
 }
 
-static void
-scale_blit(void *self, uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, hagl_bitmap_t *src)
-{
+static void scale_blit(
+    const void *self, uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, const void *src
+) {
     bb.scale_blit(&bb, x0, y0, w, h, src);
 }
 
 static void
-hline(void *self, int16_t x0, int16_t y0, uint16_t width, hagl_color_t color)
-{
+hline(const void *self, int16_t x0, int16_t y0, uint16_t width, hagl_color_t color) {
     bb.hline(&bb, x0, y0, width, color);
 }
 
 static void
+<<<<<<< HEAD
 vline(void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color)
 {
+=======
+vline(const void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color) {
+>>>>>>> 9ca3522 (Make self const)
     bb.vline(&bb, x0, y0, height, color);
 }
 
