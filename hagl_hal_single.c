@@ -51,27 +51,21 @@ valid.
 
 #include "mipi_display.h"
 
-static void
-put_pixel(void *self, int16_t x0, int16_t y0, hagl_color_t color)
-{
-    mipi_display_write_xy(x0, y0, (uint8_t *) &color);
+static void put_pixel(const void *self, int16_t x0, int16_t y0, hagl_color_t color) {
+    mipi_display_write_xy(x0, y0, (uint8_t *)&color);
+}
+
+static void blit(void *self, int16_t x0, int16_t y0, hagl_bitmap_t *src) {
+    mipi_display_write_xywh(x0, y0, src->width, src->height, (uint8_t *)src->buffer);
 }
 
 static void
-blit(void *self, int16_t x0, int16_t y0, hagl_bitmap_t *src)
-{
-    mipi_display_write_xywh(x0, y0, src->width, src->height, (uint8_t *) src->buffer);
-}
-
-static void
-hline(void *self, int16_t x0, int16_t y0, uint16_t width, hagl_color_t color)
-{
+hline(const void *self, int16_t x0, int16_t y0, uint16_t width, hagl_color_t color) {
     mipi_display_fill_xywh(x0, y0, width, 1, &color);
 }
 
 static void
-vline(void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color)
-{
+vline(const void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color) {
     mipi_display_fill_xywh(x0, y0, 1, height, &color);
 }
 
