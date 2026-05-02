@@ -72,6 +72,9 @@ extern "C" {
 #ifndef MIPI_DISPLAY_PIN_BL
 #define MIPI_DISPLAY_PIN_BL         (13)
 #endif
+#ifndef MIPI_DISPLAY_PIN_BL_ACTIVE
+#define MIPI_DISPLAY_PIN_BL_ACTIVE  (1)
+#endif
 #ifndef MIPI_DISPLAY_PIN_CLK
 #define MIPI_DISPLAY_PIN_CLK        (10)
 #endif
