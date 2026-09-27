@@ -108,24 +108,24 @@ static hagl_color_t get_pixel(const void *self, int16_t x0, int16_t y0) {
     return bb.get_pixel(&bb, x0, y0);
 }
 
-static void blit(const void *self, int16_t x0, int16_t y0, const void *src) {
-    bb.blit(&bb, x0, y0, src);
+static void blit_xy(const void *self, int16_t x0, int16_t y0, const void *src) {
+    bb.blit_xy(&bb, x0, y0, src);
 }
 
-static void scale_blit(
+static void blit_xywh(
     const void *self, uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, const void *src
 ) {
-    bb.scale_blit(&bb, x0, y0, w, h, src);
+    bb.blit_xywh(&bb, x0, y0, w, h, src);
 }
 
 static void
-hline(const void *self, int16_t x0, int16_t y0, uint16_t width, hagl_color_t color) {
-    bb.hline(&bb, x0, y0, width, color);
+line_xyw(const void *self, int16_t x0, int16_t y0, uint16_t width, hagl_color_t color) {
+    bb.line_xyw(&bb, x0, y0, width, color);
 }
 
 static void
-vline(const void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color) {
-    bb.vline(&bb, x0, y0, height, color);
+line_xyh(const void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color) {
+    bb.line_xyh(&bb, x0, y0, height, color);
 }
 
 void
@@ -152,10 +152,10 @@ hagl_hal_init(hagl_backend_t *backend)
     backend->depth = HAGL_PICO_MIPI_DISPLAY_DEPTH;
     backend->put_pixel = put_pixel;
     backend->get_pixel = get_pixel;
-    backend->hline = hline;
-    backend->vline = vline;
-    backend->blit = blit;
-    backend->scale_blit = scale_blit;
+    backend->line_xyw = line_xyw;
+    backend->line_xyh = line_xyh;
+    backend->blit_xy = blit_xy;
+    backend->blit_xywh = blit_xywh;
     backend->flush = flush;
 
     /* Initially use the first buffer. */
