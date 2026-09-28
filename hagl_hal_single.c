@@ -60,12 +60,12 @@ static void blit(void *self, int16_t x0, int16_t y0, hagl_bitmap_t *src) {
 }
 
 static void
-hline(const void *self, int16_t x0, int16_t y0, uint16_t width, hagl_color_t color) {
+line_xyw(const void *self, int16_t x0, int16_t y0, uint16_t width, hagl_color_t color) {
     mipi_display_fill_xywh(x0, y0, width, 1, &color);
 }
 
 static void
-vline(const void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color) {
+line_xyh(const void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color) {
     mipi_display_fill_xywh(x0, y0, 1, height, &color);
 }
 
@@ -78,8 +78,8 @@ hagl_hal_init(hagl_backend_t *backend)
     backend->height = MIPI_DISPLAY_HEIGHT;
     backend->depth = MIPI_DISPLAY_DEPTH;
     backend->put_pixel = put_pixel;
-    backend->hline = hline;
-    backend->vline = vline;
+    backend->line_xyw = line_xyw;
+    backend->line_xyh = line_xyh;
 }
 
 #endif /* HAGL_HAL_USE_SINGLE_BUFFER */
