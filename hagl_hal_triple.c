@@ -113,7 +113,7 @@ static void blit_xy(const void *self, int16_t x0, int16_t y0, const void *src) {
 }
 
 static void blit_xywh(
-    const void *self, uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, const void *src
+    const void *self, int16_t x0, int16_t y0, uint16_t w, uint16_t h, const void *src
 ) {
     bb.blit_xywh(&bb, x0, y0, w, h, src);
 }
