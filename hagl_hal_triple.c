@@ -61,9 +61,7 @@ valid.
 
 static hagl_bitmap_t bb;
 
-static size_t
-flush(void *self)
-{
+static size_t flush(const void *self) {
     const hagl_backend_t *backend = self;
 
     uint8_t *buffer = bb.buffer;
@@ -102,40 +100,32 @@ flush(void *self)
 #endif /* HAGL_HAL_PIXEL_SIZE==2 */
 }
 
-static void
-put_pixel(void *self, int16_t x0, int16_t y0, hagl_color_t color)
-{
+static void put_pixel(const void *self, int16_t x0, int16_t y0, hagl_color_t color) {
     bb.put_pixel(&bb, x0, y0, color);
 }
 
-static hagl_color_t
-get_pixel(void *self, int16_t x0, int16_t y0)
-{
+static hagl_color_t get_pixel(const void *self, int16_t x0, int16_t y0) {
     return bb.get_pixel(&bb, x0, y0);
 }
 
-static void
-blit(void *self, int16_t x0, int16_t y0, hagl_bitmap_t *src)
-{
-    bb.blit(&bb, x0, y0, src);
+static void blit_xy(const void *self, int16_t x0, int16_t y0, const void *src) {
+    bb.blit_xy(&bb, x0, y0, src);
+}
+
+static void blit_xywh(
+    const void *self, int16_t x0, int16_t y0, uint16_t w, uint16_t h, const void *src
+) {
+    bb.blit_xywh(&bb, x0, y0, w, h, src);
 }
 
 static void
-scale_blit(void *self, uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, hagl_bitmap_t *src)
-{
-    bb.scale_blit(&bb, x0, y0, w, h, src);
+line_xyw(const void *self, int16_t x0, int16_t y0, uint16_t width, hagl_color_t color) {
+    bb.line_xyw(&bb, x0, y0, width, color);
 }
 
 static void
-hline(void *self, int16_t x0, int16_t y0, uint16_t width, hagl_color_t color)
-{
-    bb.hline(&bb, x0, y0, width, color);
-}
-
-static void
-vline(void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color)
-{
-    bb.vline(&bb, x0, y0, height, color);
+line_xyh(const void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t color) {
+    bb.line_xyh(&bb, x0, y0, height, color);
 }
 
 void
@@ -162,10 +152,10 @@ hagl_hal_init(hagl_backend_t *backend)
     backend->depth = HAGL_PICO_MIPI_DISPLAY_DEPTH;
     backend->put_pixel = put_pixel;
     backend->get_pixel = get_pixel;
-    backend->hline = hline;
-    backend->vline = vline;
-    backend->blit = blit;
-    backend->scale_blit = scale_blit;
+    backend->line_xyw = line_xyw;
+    backend->line_xyh = line_xyh;
+    backend->blit_xy = blit_xy;
+    backend->blit_xywh = blit_xywh;
     backend->flush = flush;
 
     /* Initially use the first buffer. */
