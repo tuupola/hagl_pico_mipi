@@ -44,9 +44,9 @@ valid.
 
 #ifdef HAGL_HAL_USE_SINGLE_BUFFER
 
-#include <hagl/bitmap.h>
-#include <hagl/backend.h>
 #include <hagl.h>
+#include <hagl/backend.h>
+#include <hagl/bitmap.h>
 #include <string.h>
 
 #include "mipi_display.h"
@@ -69,9 +69,7 @@ line_xyh(const void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t
     mipi_display_fill_xywh(x0, y0, 1, height, &color);
 }
 
-void
-hagl_hal_init(hagl_backend_t *backend)
-{
+void hagl_hal_init(hagl_backend_t *backend) {
     mipi_display_init();
 
     backend->width = MIPI_DISPLAY_WIDTH;

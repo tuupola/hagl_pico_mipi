@@ -46,15 +46,15 @@ valid.
 
 #ifdef HAGL_HAL_USE_TRIPLE_BUFFER
 
-#include <string.h>
 #include <hardware/gpio.h>
+#include <string.h>
 
-#include <mipi_display.h>
 #include <mipi_dcs.h>
+#include <mipi_display.h>
 
+#include <hagl.h>
 #include <hagl/backend.h>
 #include <hagl/bitmap.h>
-#include <hagl.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,18 +74,19 @@ static size_t flush(const void *self) {
     }
 
 #if MIPI_DISPLAY_PIN_TE > 0
-    while (!gpio_get(MIPI_DISPLAY_PIN_TE)) {}
+    while (!gpio_get(MIPI_DISPLAY_PIN_TE)) {
+    }
 #endif /* MIPI_DISPLAY_PIN_TE > 0 */
 
-#if HAGL_HAL_PIXEL_SIZE==1
+#if HAGL_HAL_PIXEL_SIZE == 1
     /* Flush the current back buffer. */
-    return mipi_display_write_xywh(0, 0, bb.width, bb.height, (uint8_t *) buffer);
+    return mipi_display_write_xywh(0, 0, bb.width, bb.height, (uint8_t *)buffer);
 #endif /* HAGL_HAL_PIXEL_SIZE==1 */
 
-#if HAGL_HAL_PIXEL_SIZE==2
+#if HAGL_HAL_PIXEL_SIZE == 2
     static hagl_color_t line[MIPI_DISPLAY_WIDTH];
 
-    hagl_color_t *ptr = (hagl_color_t *) buffer;
+    hagl_color_t *ptr = (hagl_color_t *)buffer;
     size_t sent = 0;
 
     for (uint16_t y = 0; y < HAGL_PICO_MIPI_DISPLAY_HEIGHT; y++) {
@@ -93,8 +94,9 @@ static size_t flush(const void *self) {
             line[x * 2] = *(ptr);
             line[x * 2 + 1] = *(ptr++);
         }
-        sent += mipi_display_write_xywh(0, y * 2, MIPI_DISPLAY_WIDTH, 1, (uint8_t *) line);
-        sent += mipi_display_write_xywh(0, y * 2 + 1, MIPI_DISPLAY_WIDTH, 1, (uint8_t *) line);
+        sent += mipi_display_write_xywh(0, y * 2, MIPI_DISPLAY_WIDTH, 1, (uint8_t *)line);
+        sent +=
+            mipi_display_write_xywh(0, y * 2 + 1, MIPI_DISPLAY_WIDTH, 1, (uint8_t *)line);
     }
     return sent;
 #endif /* HAGL_HAL_PIXEL_SIZE==2 */
@@ -128,23 +130,37 @@ line_xyh(const void *self, int16_t x0, int16_t y0, uint16_t height, hagl_color_t
     bb.line_xyh(&bb, x0, y0, height, color);
 }
 
-void
-hagl_hal_init(hagl_backend_t *backend)
-{
+void hagl_hal_init(hagl_backend_t *backend) {
     mipi_display_init();
 
     if (!backend->buffer) {
-        backend->buffer = calloc(HAGL_PICO_MIPI_DISPLAY_WIDTH * HAGL_PICO_MIPI_DISPLAY_HEIGHT * (HAGL_PICO_MIPI_DISPLAY_DEPTH / 8), sizeof(uint8_t));
-        hagl_hal_debug("Allocated first back buffer to address %p.\n", (void *) backend->buffer);
+        backend->buffer = calloc(
+            HAGL_PICO_MIPI_DISPLAY_WIDTH * HAGL_PICO_MIPI_DISPLAY_HEIGHT *
+                (HAGL_PICO_MIPI_DISPLAY_DEPTH / 8),
+            sizeof(uint8_t)
+        );
+        hagl_hal_debug(
+            "Allocated first back buffer to address %p.\n", (void *)backend->buffer
+        );
     } else {
-        hagl_hal_debug("Using provided first back buffer at address %p.\n", (void *) backend->buffer);
+        hagl_hal_debug(
+            "Using provided first back buffer at address %p.\n", (void *)backend->buffer
+        );
     }
 
     if (!backend->buffer2) {
-        backend->buffer2 = calloc(HAGL_PICO_MIPI_DISPLAY_WIDTH * HAGL_PICO_MIPI_DISPLAY_HEIGHT * (HAGL_PICO_MIPI_DISPLAY_DEPTH / 8), sizeof(uint8_t));
-        hagl_hal_debug("Allocated second back buffer to address %p.\n", (void *) backend->buffer2);
+        backend->buffer2 = calloc(
+            HAGL_PICO_MIPI_DISPLAY_WIDTH * HAGL_PICO_MIPI_DISPLAY_HEIGHT *
+                (HAGL_PICO_MIPI_DISPLAY_DEPTH / 8),
+            sizeof(uint8_t)
+        );
+        hagl_hal_debug(
+            "Allocated second back buffer to address %p.\n", (void *)backend->buffer2
+        );
     } else {
-        hagl_hal_debug("Using provided second back buffer at address %p.\n", (void *) backend->buffer2);
+        hagl_hal_debug(
+            "Using provided second back buffer at address %p.\n", (void *)backend->buffer2
+        );
     }
 
     backend->width = HAGL_PICO_MIPI_DISPLAY_WIDTH;
@@ -159,7 +175,9 @@ hagl_hal_init(hagl_backend_t *backend)
     backend->flush = flush;
 
     /* Initially use the first buffer. */
-    hagl_bitmap_init(&bb, backend->width, backend->height, backend->depth, backend->buffer);
+    hagl_bitmap_init(
+        &bb, backend->width, backend->height, backend->depth, backend->buffer
+    );
 }
 
 #endif /* HAGL_HAL_USE_TRIPLE_BUFFER */
