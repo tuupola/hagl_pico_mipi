@@ -3,24 +3,34 @@
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
 ## [0.6.0](https://github.com/tuupola/hagl_pico_mipi/compare/0.5.0...master) unreleased
+
+This version adds support for HAGL 0.9.0.
+
 ### Changed
+
 - Self is now const void ([#73](https://github.com/tuupola/hagl_pico_mipi/pull/73)). BC break!
-- Applied new clang format ([#72](https://github.com/tuupola/hagl_pico_mipi/pull/72)).
+- Rename `hline` to `line_xyw`, `vline` to `line_xyh`, `blit` to `blit_xy` and `scale_blit` to `blit_xywh` ([#74](https://github.com/tuupola/hagl_pico_mipi/pull/74)). BC break!
+- Use unsigned width and height for blits ([#75](https://github.com/tuupola/hagl_pico_mipi/pull/75)).
 
 ## [0.5.0](https://github.com/tuupola/hagl_pico_mipi/compare/0.4.0...0.5.0) - 2026-03-28
 
 ### Fixed
+
 - Removed stack usage from hline and vline functions ([#41](https://github.com/tuupola/hagl_pico_mipi/pull/41)).
+- `MIPI_DISPLAY_INVERT` logic was broken ([#53](https://github.com/tuupola/hagl_pico_mipi/pull/53)).
+- Compiling failed when `HAGL_HAL_DEBUG` was not defined ([#56](https://github.com/tuupola/hagl_pico_mipi/pull/56)).
 
 ### Changed
 
 - SPI data write functions are now inlined to improve performance ([#43](https://github.com/tuupola/hagl_pico_mipi/pull/43)).
+- Send only start coordinates when putting a single pixel ([#50](https://github.com/tuupola/hagl_pico_mipi/pull/50)).
 - Rename `mipi_display_write()` to `mipi_display_write_xywh()` ([#51](https://github.com/tuupola/hagl_pico_mipi/pull/51)).
 - Rename `mipi_display_fill()` to `mipi_display_fill_xywh()` ([#52](https://github.com/tuupola/hagl_pico_mipi/pull/52)).
 
 ### Added
 
 - Support for `MIPI_DISPLAY_PIN_TE` setting ([#45](https://github.com/tuupola/hagl_pico_mipi/pull/45), [#49](https://github.com/tuupola/hagl_pico_mipi/pull/49)). Used for boards such as Pimoroni PicoSystem which have the Tearing Effect (TE) pin connected.
+- Add `mipi_display_write_xy()` ([#50](https://github.com/tuupola/hagl_pico_mipi/pull/50)).
 - Add config file for Waveshare 1.14inch LCD Module (240x135 ST7789VW) ([#54](https://github.com/tuupola/hagl_pico_mipi/pull/54)).
 - Add config for Waveshare Pico-LCD-2 (320x240 ST7789V) ([#61](https://github.com/tuupola/hagl_pico_mipi/pull/61)).
 - Add config for Waveshare Pico-LCD-1.8 (160x128 ST7735S) ([#62](https://github.com/tuupola/hagl_pico_mipi/pull/62)).
@@ -29,10 +39,10 @@ All notable changes to this project will be documented in this file, in reverse 
 - Add config file for Pimoroni Pico Display Pack 2.0 (320 x 240 ST7789) ([#69](https://github.com/tuupola/hagl_pico_mipi/pull/69)).
 - Add config for Waveshare RP2040-GEEK (240x135 ST7789VW) ([#70](https://github.com/tuupola/hagl_pico_mipi/pull/70)).
 
-
 ## [0.4.0](https://github.com/tuupola/hagl_pico_mipi/compare/0.3.0...0.4.0) - 2023-03-11
 
 ### Added
+
 - Config file for Pimoroni PicoSystem ([3aced13](https://github.com/tuupola/hagl_pico_mipi/commit/3aced138b409bd26b135f5d18d08f349a39f54fe)).
 
 - Config files for generic displays ([#23](https://github.com/tuupola/hagl_pico_mipi/pull/23)).
@@ -41,14 +51,14 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Support for `HAGL_HAL_PIXEL_SIZE` setting ([#25](https://github.com/tuupola/hagl_pico_mipi/pull/25)).
 
-    `HAGL_MIPI_DISPLAY_WIDTH` and `HAGL_MIPI_DISPLAY_HEIGHT` are the hardware
-    dimensions. `MIPI_DISPLAY_WIDTH` and `MIPI_DISPLAY_HEIGHT` are the backend dimensions. If hardware dimension is 320 and pixel size is 2 the backend dimension will be 160.
+  `HAGL_MIPI_DISPLAY_WIDTH` and `HAGL_MIPI_DISPLAY_HEIGHT` are the hardware
+  dimensions. `MIPI_DISPLAY_WIDTH` and `MIPI_DISPLAY_HEIGHT` are the backend dimensions. If hardware dimension is 320 and pixel size is 2 the backend dimension will be 160.
 
-    Does not work with DMA at the moment.
+  Does not work with DMA at the moment.
 
 - Support for `MIPI_DISPLAY_PIN_POWER` setting ([#32](https://github.com/tuupola/hagl_pico_mipi/pull/32), [#33](https://github.com/tuupola/hagl_pico_mipi/pull/33)).
 
-    Used for boards such as LilyGO T-Display RP2040 which require powering the logic or panel from a separate pin.
+  Used for boards such as LilyGO T-Display RP2040 which require powering the logic or panel from a separate pin.
 
 ### Fixed
 
@@ -59,7 +69,6 @@ All notable changes to this project will be documented in this file, in reverse 
 - Default SPI clock is now 62500000 ([#24](https://github.com/tuupola/hagl_pico_mipi/pull/24)).
 
 - Default config is now for Waveshare RP2040-LCD-0.96 ([#38](https://github.com/tuupola/hagl_pico_mipi/pull/38)).
-
 
 ## [0.3.0](https://github.com/tuupola/hagl_pico_mipi/compare/0.2.1...0.3.0) - 2022-09-17
 
@@ -75,11 +84,12 @@ This version adds support for HAGL 0.6.x.
 
 - Support for `MIPI_DISPLAY_SPI_PORT` setting ([#16](https://github.com/tuupola/hagl_pico_mipi/pull/16), [#19](https://github.com/tuupola/hagl_pico_mipi/pull/19)).
 
-- Config files for Pimoroni Pico Display pack, Waveshare Pico-LCD-0.96, Waveshare Pico-LCD-1.44, Waveshare Pico-LCD-1.3 and Waveshare RP2040-LCD-0.96  ([#18](https://github.com/tuupola/hagl_pico_mipi/pull/18)).
+- Config files for Pimoroni Pico Display pack, Waveshare Pico-LCD-0.96, Waveshare Pico-LCD-1.44, Waveshare Pico-LCD-1.3 and Waveshare RP2040-LCD-0.96 ([#18](https://github.com/tuupola/hagl_pico_mipi/pull/18)).
 
 ## [0.2.1](https://github.com/tuupola/hagl_pico_mipi/compare/0.2.0...0.2.1) - 2021-04-30
 
 ### Fixed
+
 - Both `fps()` and `aps()` were broken due to missing `_times()` function ([#33](https://github.com/tuupola/hagl_pico_mipi/pull/33)).
 
 ## 0.2.0 - 2021-03-21
